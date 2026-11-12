@@ -20,7 +20,7 @@ export function Celebration({ plan, onClose }: { plan: Pick<Plan, 'date' | 'titl
             transition={{ type: 'spring', stiffness: 300, damping: 18 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <Floating3DParticles className="cele-particles" quantity={140} drift={0.6} opacity={0.5} />
+            <Floating3DParticles className="cele-particles" quantity={40} size={18} drift={0.6} opacity={0.6} mobileFactor={0.8} />
             <div className="big-emoji pop">🎉</div>
             <p className="eyebrow">Date ayarlandı!</p>
             <DiaTextReveal as="h2" text={plan.title || 'Date'} delay={0.25} />

@@ -67,7 +67,7 @@ export function Reminder({ nameDative, onDone }: { nameDative: string | null; on
         >
           <Aurora />
           <DotPattern glow glowCount={30} className="reminder-dots" />
-          <Floating3DParticles quantity={300} mobileFactor={0.45} />
+          <Floating3DParticles quantity={70} opacity={0.5} />
 
           <motion.div className="reminder-in" exit={{ y: -40, opacity: 0, filter: 'blur(6px)' }} transition={{ duration: 0.45 }}>
             <motion.div className="reminder-orbit" initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 180, damping: 16 }}>

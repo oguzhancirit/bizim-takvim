@@ -57,7 +57,7 @@ export function Login({ onSignIn }: { onSignIn: () => Promise<void> }) {
       <section className="land-hero">
         <Aurora />
         <DotPattern glow glowCount={48} className="land-dots" />
-        <Floating3DParticles quantity={420} mobileFactor={0.45} />
+        <Floating3DParticles quantity={80} />
         <div className="land-hero-in">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
             <GradientPill>

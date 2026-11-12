@@ -184,7 +184,7 @@ export default function Home({ user }: { user: User }) {
       <div className="app-bg" aria-hidden>
         <Aurora />
         <DotPattern glow glowCount={28} className="app-dots" />
-        <Floating3DParticles quantity={220} size={5} opacity={0.55} drift={0.3} mobileFactor={0.45} />
+        <Floating3DParticles quantity={46} opacity={0.3} drift={0.28} />
       </div>
       <Toast message={toast} />
 

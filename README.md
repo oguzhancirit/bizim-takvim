@@ -6,7 +6,10 @@ sonra **Onaya gönder** → karşı tarafa bildirim gider → onaylanınca konfe
 
 - React 19 + Vite, animasyonlar `motion`, konfeti `canvas-confetti`
 - Firebase: Google girişi, Firestore (canlı senkron), Cloud Messaging (telefon bildirimi)
-- Yayın: GitHub Pages · Telefon bildirimleri: GitHub Actions (5 dakikada bir, ücretsiz)
+- Adres: **https://bizim-takvim-48b62.web.app** (Firebase Hosting; GitHub'a push → otomatik yayın)
+- Telefon bildirimleri: GitHub Actions (5 dakikada bir, ücretsiz)
+- Neden Firebase Hosting: Google girişinin açıldığı adres (`authDomain`) ile site aynı adreste olmalı,
+  yoksa iPhone Safari girişi engelliyor. Eski GitHub Pages adresi yeni adrese yönlendirir.
 - `prefers-reduced-motion` açıksa animasyonlar kapanır; açık/koyu tema otomatik
 
 ## Akış
@@ -25,7 +28,7 @@ sonra **Onaya gönder** → karşı tarafa bildirim gider → onaylanınca konfe
 ### 1. Firebase projesi
 1. <https://console.firebase.google.com> → **Proje ekle** (Analytics gerekmez). Ücretsiz Spark planı yeterli.
 2. **Authentication → Başlayın → Google** sağlayıcısını etkinleştir.
-   **Ayarlar → Yetkili alan adları** bölümüne `KULLANICI_ADIN.github.io` ekle.
+   **Ayarlar → Yetkili alan adları** listesinde `PROJE_ID.web.app` olduğundan emin ol.
 3. **Firestore Database → Veritabanı oluştur** (üretim modu, konum `eur3`).
    **Kurallar** sekmesine bu repodaki [`firestore.rules`](firestore.rules) içeriğini yapıştır → **Yayınla**.
 4. Firestore'da **Koleksiyon başlat** → koleksiyon kimliği `allowed`:
@@ -43,7 +46,7 @@ sonra **Onaya gönder** → karşı tarafa bildirim gider → onaylanınca konfe
 2. Firebase **Proje ayarları → Hizmet hesapları → Yeni özel anahtar oluştur** → JSON iner.
    Repo **Settings → Secrets and variables → Actions → New repository secret**:
    ad `FIREBASE_SERVICE_ACCOUNT`, değer JSON dosyasının tamamı. Sonra indirilen dosyayı sil — asla commit'leme.
-3. `main`'e push → uygulama `https://KULLANICI_ADIN.github.io/bizim-takvim/` adresinde yayında.
+3. `main`'e push → uygulama `https://PROJE_ID.web.app` adresinde yayında (iş akışı: `deploy.yml`).
 
 ### 3. Telefonlar
 - **iPhone:** Safari'de adresi aç → Paylaş → **Ana Ekrana Ekle** → uygulamayı ana ekrandan aç →
@@ -59,7 +62,7 @@ sonra **Onaya gönder** → karşı tarafa bildirim gider → onaylanınca konfe
 ## Geliştirme
 ```bash
 npm install
-npm run dev     # http://localhost:5173/bizim-takvim/
+npm run dev     # http://localhost:5173/
 npm run build
 ```
 Yerelde Google girişi için Firebase'de `localhost` yetkili alan adı olarak zaten ekli gelir.

@@ -3,7 +3,9 @@
 // firestore.rules ve Firestore'daki `allowed` listesidir.
 export const firebaseConfig = {
   apiKey: 'AIzaSyDSkR8s5q5ASjvSyLzEucUz3aF48LWDtOY',
-  authDomain: 'bizim-takvim-48b62.firebaseapp.com',
+  // Uygulamanın kendi adresi: giriş penceresi ile site aynı adreste olsun ki iPhone Safari
+  // girişi engellemesin (Firebase Hosting /__/auth/ yolunu kendisi sunar).
+  authDomain: 'bizim-takvim-48b62.web.app',
   projectId: 'bizim-takvim-48b62',
   storageBucket: 'bizim-takvim-48b62.firebasestorage.app',
   messagingSenderId: '334070201655',
