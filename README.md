@@ -6,10 +6,11 @@ sonra **Onaya gönder** → karşı tarafa bildirim gider → onaylanınca konfe
 
 - React 19 + Vite, animasyonlar `motion`, konfeti `canvas-confetti`
 - Firebase: Google girişi, Firestore (canlı senkron), Cloud Messaging (telefon bildirimi)
-- Adres: **https://bizim-takvim-48b62.web.app** (Firebase Hosting; GitHub'a push → otomatik yayın)
+- Adres: **https://bizim-takvim-48b62.firebaseapp.com** (Firebase Hosting; GitHub'a push → otomatik yayın)
 - Telefon bildirimleri: GitHub Actions (5 dakikada bir, ücretsiz)
-- Neden Firebase Hosting: Google girişinin açıldığı adres (`authDomain`) ile site aynı adreste olmalı,
-  yoksa iPhone Safari girişi engelliyor. Eski GitHub Pages adresi yeni adrese yönlendirir.
+- Neden Firebase Hosting + `firebaseapp.com`: Google girişinin açıldığı adres (`authDomain`) ile site aynı
+  adreste olmalı (yoksa iPhone Safari girişi engelliyor) ve Google giriş anahtarı bu adrese hazır izinli.
+  `web.app` ve eski GitHub Pages adresi buraya yönlendirir.
 - `prefers-reduced-motion` açıksa animasyonlar kapanır; açık/koyu tema otomatik
 
 ## Akış
@@ -28,7 +29,7 @@ sonra **Onaya gönder** → karşı tarafa bildirim gider → onaylanınca konfe
 ### 1. Firebase projesi
 1. <https://console.firebase.google.com> → **Proje ekle** (Analytics gerekmez). Ücretsiz Spark planı yeterli.
 2. **Authentication → Başlayın → Google** sağlayıcısını etkinleştir.
-   **Ayarlar → Yetkili alan adları** listesinde `PROJE_ID.web.app` olduğundan emin ol.
+   **Ayarlar → Yetkili alan adları** listesinde `PROJE_ID.firebaseapp.com` olduğundan emin ol (varsayılan olarak vardır).
 3. **Firestore Database → Veritabanı oluştur** (üretim modu, konum `eur3`).
    **Kurallar** sekmesine bu repodaki [`firestore.rules`](firestore.rules) içeriğini yapıştır → **Yayınla**.
 4. Firestore'da **Koleksiyon başlat** → koleksiyon kimliği `allowed`:
@@ -46,7 +47,7 @@ sonra **Onaya gönder** → karşı tarafa bildirim gider → onaylanınca konfe
 2. Firebase **Proje ayarları → Hizmet hesapları → Yeni özel anahtar oluştur** → JSON iner.
    Repo **Settings → Secrets and variables → Actions → New repository secret**:
    ad `FIREBASE_SERVICE_ACCOUNT`, değer JSON dosyasının tamamı. Sonra indirilen dosyayı sil — asla commit'leme.
-3. `main`'e push → uygulama `https://PROJE_ID.web.app` adresinde yayında (iş akışı: `deploy.yml`).
+3. `main`'e push → uygulama `https://PROJE_ID.firebaseapp.com` adresinde yayında (iş akışı: `deploy.yml`).
 
 ### 3. Telefonlar
 - **iPhone:** Safari'de adresi aç → Paylaş → **Ana Ekrana Ekle** → uygulamayı ana ekrandan aç →
