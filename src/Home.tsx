@@ -14,6 +14,14 @@ import { DayPanel } from './components/DayPanel';
 import { BellButton, NotificationList, Toast } from './components/Notifications';
 import { Celebration } from './components/Celebration';
 import { Avatar, Sheet, personColor } from './components/ui';
+import { IdeaMarquee } from './components/Gates';
+import { AnimatedGradientText } from './components/magic/AnimatedGradientText';
+import { DiaTextReveal } from './components/magic/DiaTextReveal';
+import { DotPattern } from './components/magic/DotPattern';
+import { ShimmerButton } from './components/magic/ShimmerButton';
+import { SpinningText } from './components/magic/SpinningText';
+import { TextReveal } from './components/magic/TextReveal';
+import { monthGrid } from './lib/dates';
 
 const STATUS_ORDER = { accepted: 0, pending: 1, draft: 2 } as const;
 
@@ -132,6 +140,22 @@ export default function Home({ user }: { user: User }) {
     .sort((a, b) => a.date.localeCompare(b.date))[0];
   const pName = partner ? firstName(partner.name) : 'Partnerin';
 
+  /* Bu ayın özeti (kaydırınca kelime kelime beliren metin) */
+  const summary = useMemo(() => {
+    const now = new Date();
+    const keys = monthGrid(now.getFullYear(), now.getMonth()).filter((c) => c.inMonth && c.key >= today).map((c) => c.key);
+    const free = keys.filter((k) => infoFor(k).state === 'free').length;
+    const monthPlans = plans.filter((p) => keys.includes(p.date));
+    const acc = monthPlans.filter((p) => p.status === 'accepted').length;
+    const pend = monthPlans.filter((p) => p.status !== 'accepted').length;
+    return [
+      `Bu ay ${free} ortak boş gününüz kaldı.`,
+      acc ? `${acc} date ayarlandı` : 'Henüz ayarlanmış date yok',
+      pend ? `ve ${pend} plan hazırlanıyor.` : 've hazırlanan plan yok.',
+      free ? 'Yeşil bir gün seç, gerisi kolay.' : 'Dolu günleri gözden geçirmeye ne dersin?',
+    ].join(' ');
+  }, [plans, infoFor, today]);
+
   const askPush = async () => {
     try {
       const r = await enablePush(me.uid);
@@ -153,6 +177,7 @@ export default function Home({ user }: { user: User }) {
 
   return (
     <div className="app">
+      <DotPattern glow glowCount={24} className="app-dots" />
       <Toast message={toast} />
 
       <header className="topbar">
@@ -162,7 +187,7 @@ export default function Home({ user }: { user: User }) {
         </button>
         <div className="hello">
           <small>Merhaba {firstName(me.name)}</small>
-          <strong>Sen & {pName}</strong>
+          <strong>Sen & <AnimatedGradientText>{pName}</AnimatedGradientText></strong>
         </div>
         <BellButton count={unread.length} onClick={openNotifs} />
       </header>
@@ -194,10 +219,9 @@ export default function Home({ user }: { user: User }) {
 
       <AnimatePresence mode="wait" initial={false}>
         {waitingForMe ? (
-          <motion.button
+          <motion.div
             key={`w-${waitingForMe.id}`}
             className="hero invite"
-            onClick={() => setSelected(waitingForMe.date)}
             initial={{ opacity: 0, y: 16, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10 }}
@@ -207,9 +231,10 @@ export default function Home({ user }: { user: User }) {
             <span>
               <small>{pName} bir date önerdi</small>
               <strong>{waitingForMe.title || 'Yeni date'}</strong>
-              <em>{longDate(waitingForMe.date)} · Bakmak için dokun</em>
+              <em>{longDate(waitingForMe.date)}</em>
+              <ShimmerButton className="sm light" onClick={() => setSelected(waitingForMe.date)}>Bak ve yanıtla →</ShimmerButton>
             </span>
-          </motion.button>
+          </motion.div>
         ) : nextDate ? (
           <motion.button
             key={`n-${nextDate.id}`}
@@ -220,13 +245,16 @@ export default function Home({ user }: { user: User }) {
             exit={{ opacity: 0, y: -10 }}
             transition={spring}
           >
-            <span className="countdown">
-              <b>{daysUntil(nextDate.date) === 0 ? 'Bugün!' : daysUntil(nextDate.date)}</b>
-              {daysUntil(nextDate.date) > 0 && <small>gün</small>}
+            <span className="countdown-orbit">
+              <SpinningText text="SIRADAKİ DATE • SIRADAKİ DATE •" radius={8.2} duration={14} />
+              <span className="countdown">
+                <b>{daysUntil(nextDate.date) === 0 ? 'Bugün!' : daysUntil(nextDate.date)}</b>
+                {daysUntil(nextDate.date) > 0 && <small>gün</small>}
+              </span>
             </span>
             <span>
               <small>Sıradaki date</small>
-              <strong>{nextDate.title || 'Date'}</strong>
+              <DiaTextReveal as="strong" text={nextDate.title || 'Date'} />
               <em>
                 {longDate(nextDate.date)}
                 {nextDate.time ? ` · ${nextDate.time}` : ''}
@@ -237,7 +265,7 @@ export default function Home({ user }: { user: User }) {
           <motion.div key="empty" className="hero empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <span className="hero-emoji">🌿</span>
             <span>
-              <strong>Yeşil bir gün seç</strong>
+              <DiaTextReveal as="strong" text="Yeşil bir gün seç" />
               <em>ikinizin de boş olduğu günlerde date planlayabilirsin</em>
             </span>
           </motion.div>
@@ -264,6 +292,16 @@ export default function Home({ user }: { user: User }) {
       </AnimatePresence>
 
       <Calendar infoFor={infoFor} onDay={onDay} me={me} partner={partner} busyMode={busyMode} />
+
+      <section className="ideas-block">
+        <h3 className="section-label">Date fikirleri</h3>
+        <IdeaMarquee />
+      </section>
+
+      <section className="summary-block">
+        <h3 className="section-label">Bu ayın özeti</h3>
+        <TextReveal text={summary} offset={['start 0.95', 'end 0.82']} highlight={{ ortak: 'var(--free)', date: 'var(--rose)', Yeşil: 'var(--free)', hazırlanıyor: 'var(--amber)' }} />
+      </section>
 
       <Sheet open={!!selected} onClose={() => setSelected(null)} label="Gün detayı">
         {selected && <DayPanel day={selected} info={infoFor(selected)} me={me} partner={partner} onToast={showToast} />}

@@ -9,6 +9,8 @@ import { celebrate } from '../lib/confetti';
 import { spring } from '../lib/motion';
 import { Avatar, SyncedInput, Switch, personColor } from './ui';
 import type { DayInfo } from './Calendar';
+import { DiaTextReveal } from './magic/DiaTextReveal';
+import { ShimmerButton } from './magic/ShimmerButton';
 
 interface Props {
   day: string;
@@ -40,7 +42,7 @@ export function DayPanel({ day, info, me, partner, onToast }: Props) {
   return (
     <div className="day-panel">
       <p className="eyebrow">{d === 0 ? 'Bugün' : d === 1 ? 'Yarın' : d > 1 ? `${d} gün sonra` : 'Geçmiş gün'}</p>
-      <h3 className="panel-title">{longDate(day)}</h3>
+      <DiaTextReveal as="h2" key={day} text={longDate(day)} className="panel-title" duration={1.1} />
 
       <div className="people">
         <div className="person-row">
@@ -69,15 +71,13 @@ export function DayPanel({ day, info, me, partner, onToast }: Props) {
         ) : (
           <motion.div key="free" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <p className="hint">İkiniz de boşsunuz — bu günü ayırıp bir date planlayabilirsin.</p>
-            <motion.button
-              className="btn primary big"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.96 }}
+            <ShimmerButton
+              className="big"
               disabled={busyAction}
               onClick={() => run(() => createPlan(day, me, partner), `Gün ayrıldı! ${pName} da taslağa ekleme yapabilir`)}
             >
               Bu günü ayır & date planla
-            </motion.button>
+            </ShimmerButton>
           </motion.div>
         )}
       </AnimatePresence>
@@ -188,28 +188,27 @@ function Planner({
       <div className="actions">
         {plan.status === 'draft' && (
           <>
-            <motion.button
-              className="btn primary big"
-              whileTap={{ scale: 0.96 }}
+            <ShimmerButton
+              className="big"
               disabled={busy || !canSend}
               onClick={() => run(() => sendForApproval(plan, me, partner), `${pName}'a onay isteği gitti 📨`)}
             >
               Onaya gönder
-            </motion.button>
+            </ShimmerButton>
             {!canSend && <p className="hint small">Göndermek için bir başlık ya da etkinlik ekle.</p>}
           </>
         )}
 
         {plan.status === 'pending' && !sentByMe && (
           <>
-            <motion.button
-              className="btn primary big glow"
-              whileTap={{ scale: 0.94 }}
+            <ShimmerButton
+              className="big glow"
+              duration="2s"
               disabled={busy}
               onClick={() => run(async () => { await acceptPlan(plan, me, partner); celebrate(); }, 'Date ayarlandı! 🎉')}
             >
               Onayla ✓
-            </motion.button>
+            </ShimmerButton>
             <button className="btn ghost" disabled={busy} onClick={() => run(() => returnToDraft(plan, me, partner), 'Taslağa geri döndü')}>
               Değiştirmek istiyorum
             </button>

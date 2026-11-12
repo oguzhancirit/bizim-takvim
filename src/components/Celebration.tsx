@@ -1,6 +1,9 @@
 import { AnimatePresence, motion } from 'motion/react';
 import type { Plan } from '../types';
 import { longDate } from '../lib/dates';
+import { DiaTextReveal } from './magic/DiaTextReveal';
+import { Floating3DParticles } from './magic/Floating3DParticles';
+import { ShimmerButton } from './magic/ShimmerButton';
 
 export function Celebration({ plan, onClose }: { plan: Pick<Plan, 'date' | 'title' | 'time' | 'place'> | null; onClose: () => void }) {
   return (
@@ -17,12 +20,13 @@ export function Celebration({ plan, onClose }: { plan: Pick<Plan, 'date' | 'titl
             transition={{ type: 'spring', stiffness: 300, damping: 18 }}
             onClick={(e) => e.stopPropagation()}
           >
+            <Floating3DParticles className="cele-particles" quantity={140} drift={0.6} opacity={0.5} />
             <div className="big-emoji pop">🎉</div>
             <p className="eyebrow">Date ayarlandı!</p>
-            <h2>{plan.title || 'Date'}</h2>
+            <DiaTextReveal as="h2" text={plan.title || 'Date'} delay={0.25} />
             <p className="cele-date">{longDate(plan.date)}{plan.time ? ` · ${plan.time}` : ''}</p>
             {plan.place && <p className="cele-place">📍 {plan.place}</p>}
-            <button className="btn primary" onClick={onClose}>Harika!</button>
+            <ShimmerButton className="big" onClick={onClose}>Harika!</ShimmerButton>
           </motion.div>
         </motion.div>
       )}

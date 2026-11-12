@@ -72,3 +72,20 @@ Yerelde Google girişi için Firebase'de `localhost` yetkili alan adı olarak za
 | `busy/{uid}` | `days: ["2026-11-14", ...]` dolu günler |
 | `plans/{id}` | `date, title, time, place, activities[], status: draft · pending · accepted` |
 | `notifications/{id}` | Alıcı e-postası, tür, okundu, telefona gönderildi mi |
+
+## Animasyonlar ve kaynak
+Aşağıdaki efektler [Magic UI](https://magicui.design) (MIT) bileşenlerinden esinlenip Tailwind'siz,
+sade CSS + `motion` ile yeniden yazıldı: [`src/components/magic/`](src/components/magic/)
+
+| Bileşen | Nerede |
+|---|---|
+| Animated Gradient Text | Giriş etiketi, üst barda partner adı |
+| Dia Text Reveal | Başlıklar, sıradaki date, gün paneli, kutlama |
+| Text Reveal | Tanıtım metni, "Bu ayın özeti" |
+| Scroll Based Velocity | Date fikirleri şeridi |
+| Spinning Text | Logo çevresi, geri sayım halkası, yükleniyor |
+| Shimmer Button | Giriş, "Bu günü ayır", "Onaya gönder", "Onayla" |
+| Dot Pattern | Giriş ve ana ekran arka planı |
+| Floating 3D Particles | Giriş arka planı, kutlama kartı |
+
+Telefonda "Hareketi azalt" açıksa hepsi durur.

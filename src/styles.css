@@ -324,3 +324,164 @@ input:disabled { background: transparent; border-color: transparent; padding-lef
   .grid { gap: 4px; }
   .day { font-size: 14px; border-radius: 11px; }
 }
+
+/* =========================================================
+   Magic UI uyarlamaları (MIT, magicui.design) — sade CSS
+   ========================================================= */
+
+/* Animated Gradient Text */
+.agt {
+  background-image: linear-gradient(90deg, var(--agt-from), var(--agt-to), var(--agt-from));
+  background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  animation: agt-move var(--agt-dur, 6s) linear infinite;
+}
+@keyframes agt-move { from { background-position: 0% center; } to { background-position: -200% center; } }
+.agt-pill {
+  position: relative; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 999px;
+  font-size: 13.5px; font-weight: 650; background: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--rose) 18%, transparent);
+}
+.agt-pill::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
+  background: linear-gradient(90deg, var(--rose), var(--p2), var(--amber), var(--rose)); background-size: 300% 100%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: agt-move 5s linear infinite;
+}
+
+/* Dia Text Reveal */
+.dia { -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; display: inline-block; }
+
+/* Shimmer Button */
+.shimmer-btn {
+  --btn-bg: linear-gradient(135deg, var(--rose-2), var(--rose));
+  position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; justify-content: center;
+  padding: 12px 20px; border-radius: 16px; color: #fff; font-weight: 700; font-size: 15.5px;
+  background: var(--btn-bg);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--rose) 32%, transparent), inset 0 -6px 12px rgba(255, 255, 255, .12);
+  transition: box-shadow .25s, opacity .2s;
+}
+.shimmer-btn:hover { box-shadow: 0 12px 30px color-mix(in srgb, var(--rose) 45%, transparent), inset 0 -8px 14px rgba(255, 255, 255, .22); }
+.shimmer-btn:active { box-shadow: 0 6px 16px color-mix(in srgb, var(--rose) 30%, transparent), inset 0 -10px 16px rgba(255, 255, 255, .3); }
+.shimmer-btn:disabled { opacity: .45; }
+.shimmer-btn.big { width: 100%; padding: 15px 20px; font-size: 16.5px; border-radius: 18px; }
+.shimmer-btn.sm { padding: 8px 14px; font-size: 14px; border-radius: 12px; align-self: flex-start; margin-top: 8px; }
+.shimmer-btn.light { --btn-bg: rgba(255, 255, 255, .22); box-shadow: none; }
+.shimmer-btn.glow { animation: glow 2s ease-in-out infinite; }
+.shimmer-spark { position: absolute; inset: 0; z-index: -2; overflow: hidden; border-radius: inherit; filter: blur(2px); }
+.shimmer-spark-inner {
+  position: absolute; left: 50%; top: 50%; width: 220%; aspect-ratio: 1; translate: -50% -50%;
+  background: conic-gradient(from 0deg, transparent 0 300deg, var(--shimmer) 345deg, transparent 360deg);
+  animation: spin var(--shimmer-speed, 3s) linear infinite;
+}
+.shimmer-bg { position: absolute; inset: 2px; z-index: -1; border-radius: calc(16px - 2px); background: var(--btn-bg); }
+.shimmer-btn.big .shimmer-bg { border-radius: 16px; }
+.shimmer-slide {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .28) 50%, transparent 65%);
+  background-size: 250% 100%; animation: shimmer-slide calc(var(--shimmer-speed, 3s) * 1.4) ease-in-out infinite;
+}
+@keyframes shimmer-slide { 0% { background-position: 130% 0; } 60%, 100% { background-position: -130% 0; } }
+.shimmer-label { position: relative; display: inline-flex; align-items: center; gap: 10px; }
+.google-shimmer { --btn-bg: linear-gradient(135deg, #2b1d26, #4a2f3a); max-width: 320px; }
+@media (prefers-color-scheme: dark) { .google-shimmer { --btn-bg: linear-gradient(135deg, #3a2a35, #563b47); } }
+
+/* Spinning Text */
+.spin-text {
+  position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none;
+  font-size: 10px; font-weight: 800; letter-spacing: .02em; color: var(--rose);
+  animation: spin var(--spin-dur, 12s) linear infinite; animation-direction: var(--spin-dir, normal);
+}
+.spin-text > span { position: absolute; left: 0; top: 0; }
+
+/* Dot Pattern */
+.dot-pattern { position: absolute; inset: 0; width: 100%; height: 100%; color: color-mix(in srgb, var(--muted) 35%, transparent); pointer-events: none; }
+.dot-glow { animation: dot-glow 3s ease-in-out infinite alternate; opacity: .2; }
+@keyframes dot-glow { from { opacity: .15; transform: scale(1); } to { opacity: .9; transform: scale(1.6); } }
+
+/* Floating 3D Particles */
+.particles { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Text Reveal */
+.text-reveal { margin: 0; font-family: var(--serif); font-size: clamp(24px, 6.4vw, 34px); line-height: 1.3; font-weight: 600; letter-spacing: -.01em; display: flex; flex-wrap: wrap; gap: 0 .28em; }
+.tr-word { position: relative; display: inline-block; }
+.tr-ghost { opacity: .16; }
+.tr-live { position: absolute; left: 0; top: 0; }
+
+/* Scroll Based Velocity */
+.sv-container { position: relative; display: flex; flex-direction: column; gap: 10px; }
+.sv-container::before, .sv-container::after { content: ''; position: absolute; top: 0; bottom: 0; width: 48px; z-index: 2; pointer-events: none; }
+.sv-container::before { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
+.sv-container::after { right: 0; background: linear-gradient(-90deg, var(--bg), transparent); }
+.sv-row-clip { overflow: hidden; }
+.sv-row { display: flex; width: max-content; will-change: transform; }
+.sv-block { display: flex; gap: 10px; padding-right: 10px; }
+.idea-chip { white-space: nowrap; padding: 9px 15px; border-radius: 999px; background: var(--surface); box-shadow: var(--shadow); font-weight: 600; font-size: 14.5px; }
+.idea-chip.alt { background: var(--rose-soft); color: color-mix(in srgb, var(--rose) 75%, var(--ink)); box-shadow: none; }
+
+/* =========================================================
+   Tanıtım / giriş sayfası
+   ========================================================= */
+.landing { overflow-x: clip; }
+.land-hero { position: relative; min-height: 100dvh; display: grid; place-items: center; padding: max(28px, env(safe-area-inset-top)) 16px 40px; overflow: hidden; }
+.land-dots { -webkit-mask-image: radial-gradient(circle at 50% 42%, #000 0, transparent 70%); mask-image: radial-gradient(circle at 50% 42%, #000 0, transparent 70%); }
+.land-particles { opacity: .9; }
+.land-hero-in { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; max-width: 420px; width: 100%; }
+.logo-orbit { position: relative; width: 190px; height: 190px; display: grid; place-items: center; margin: 6px 0 2px; }
+.logo-orbit .spin-text { font-size: 11px; }
+.gate-logo { width: 96px; height: 96px; filter: drop-shadow(0 14px 24px color-mix(in srgb, var(--rose) 40%, transparent)); }
+.land-title { font-family: var(--serif); font-size: clamp(42px, 12vw, 58px); margin: 0; letter-spacing: -.02em; line-height: 1.05; }
+.land-sub { color: var(--muted); font-size: 17px; line-height: 1.5; margin: 0 0 8px; max-width: 320px; }
+.scroll-cue { margin-top: 18px; font-size: 13.5px; color: var(--muted); font-weight: 600; display: inline-flex; gap: 6px; align-items: center; }
+.cue-arrow { display: inline-block; animation: bounce-y 1.6s ease-in-out infinite; }
+@keyframes bounce-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+.landing .idea-marquee { padding: 8px 0 12px; }
+.land-how { max-width: 560px; margin: 0 auto; padding: 60px 20px 18vh; }
+.land-steps { max-width: 560px; margin: 0 auto; padding: 0 16px; display: grid; gap: 14px; }
+.step-card { position: relative; background: var(--surface); border-radius: var(--radius); padding: 20px 20px 18px; box-shadow: var(--shadow); overflow: hidden; }
+.step-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; }
+.step-card.busy::before { background: var(--busy); }
+.step-card.draft::before { background: var(--amber); }
+.step-card.date::before { background: var(--rose); }
+.step-n { font-family: var(--serif); font-size: 30px; font-weight: 700; color: color-mix(in srgb, var(--muted) 45%, transparent); }
+.step-card h3 { margin: 2px 0 6px; font-family: var(--serif); font-size: 21px; }
+.step-card p { margin: 0; color: var(--muted); line-height: 1.5; }
+.land-cta { position: relative; max-width: 560px; margin: 0 auto; padding: 90px 20px calc(80px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center; overflow: hidden; }
+.land-cta h2 { font-family: var(--serif); font-size: clamp(30px, 8vw, 40px); margin: 0; position: relative; }
+.land-cta .shimmer-btn { position: relative; }
+.cta-dots { -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0, transparent 65%); mask-image: radial-gradient(circle at 50% 50%, #000 0, transparent 65%); }
+
+.loader-orbit { position: relative; width: 120px; height: 120px; display: grid; place-items: center; }
+.loader-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--rose); animation: bounce 1.2s infinite; }
+
+/* =========================================================
+   Ana ekran eklemeleri
+   ========================================================= */
+.app { position: relative; isolation: isolate; padding-bottom: calc(28vh + env(safe-area-inset-bottom)); }
+.app > .app-dots { position: fixed; inset: 0; z-index: -1; -webkit-mask-image: linear-gradient(180deg, #000, transparent 45%); mask-image: linear-gradient(180deg, #000, transparent 45%); }
+.hero strong.dia, .hero .dia { font-family: var(--serif); font-size: 20px; font-weight: 600; }
+.countdown-orbit { position: relative; width: 104px; height: 104px; display: grid; place-items: center; flex-shrink: 0; margin: -10px -6px -10px -10px; }
+.countdown-orbit .spin-text { font-size: 9px; }
+.countdown-orbit .countdown { width: 58px; height: 58px; border-radius: 50%; }
+.countdown-orbit .countdown b { font-size: 21px; }
+.hero.invite { cursor: default; }
+.hero.invite .hero-emoji { align-self: flex-start; }
+.ideas-block, .summary-block { display: flex; flex-direction: column; gap: 10px; }
+.ideas-block .section-label, .summary-block .section-label { margin: 10px 4px 0; }
+.ideas-block .sv-container { margin: 0 -16px; }
+.summary-block { padding: 6px 4px 0; }
+.summary-block .text-reveal { font-size: clamp(24px, 6.6vw, 30px); }
+.panel-title.dia { display: block; }
+
+/* Kutlama kartı */
+.celebrate-card { position: relative; overflow: hidden; }
+.celebrate-card > *:not(.cele-particles) { position: relative; }
+.celebrate-card h2.dia { display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .agt, .dia { color: var(--ink); -webkit-text-fill-color: currentColor; background: none; }
+  .shimmer-spark, .shimmer-slide { display: none; }
+}
