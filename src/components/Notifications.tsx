@@ -7,7 +7,7 @@ export function NotificationList({ items, onOpen }: { items: AppNotification[]; 
     <div>
       <h3 className="panel-title">Bildirimler</h3>
       {items.length === 0 ? (
-        <p className="hint">Henüz bildirim yok. Bir date planla, haber versin 💌</p>
+        <p className="hint">Henüz bildirim yok. Bir date planla, haber versin 📨</p>
       ) : (
         <ul className="notifs">
           {items.map((n, i) => {

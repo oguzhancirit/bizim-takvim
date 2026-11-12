@@ -1,7 +1,7 @@
 {
-  "name": "Bizim Takvim",
-  "short_name": "Bizim Takvim",
-  "description": "İkimizin ortak date takvimi",
+  "name": "Date Takvimi",
+  "short_name": "Date Takvimi",
+  "description": "Ortak date takvimi",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

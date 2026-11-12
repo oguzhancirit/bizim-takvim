@@ -1,4 +1,4 @@
-/* Bizim Takvim service worker: telefona gelen push bildirimlerini gösterir. */
+/* Date Takvimi service worker: telefona gelen push bildirimlerini gösterir. */
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
 
@@ -6,7 +6,7 @@ self.addEventListener('push', (event) => {
   let payload = {};
   try { payload = event.data ? event.data.json() : {}; } catch { payload = {}; }
   const d = payload.data || payload.notification || {};
-  const title = d.title || 'Bizim Takvim';
+  const title = d.title || 'Date Takvimi';
   event.waitUntil(
     self.registration.showNotification(title, {
       body: d.body || '',

@@ -1,8 +1,8 @@
-# Bizim Takvim 💕
+# Date Takvimi
 
-İki kişilik ortak date takvimi. Dolu günler kırmızı, ikinizin de boş olduğu günler yeşil.
+Ece ile ortak date takvimi. Dolu günler kırmızı, ikinizin de boş olduğu günler yeşil.
 Yeşil bir günü ayırıp **ortak taslak** açarsın, ikiniz de etkinlik ekleyip düzenlersiniz,
-sonra **Onaya gönder** → karşı tarafa bildirim gider → onaylanınca konfeti 🎉 ve gün pembe kalple işaretlenir.
+sonra **Onaya gönder** → karşı tarafa bildirim gider → onaylanınca konfeti 🎉 ve gün turuncu ✦ ile işaretlenir.
 
 - React 19 + Vite, animasyonlar `motion`, konfeti `canvas-confetti`
 - Firebase: Google girişi, Firestore (canlı senkron), Cloud Messaging (telefon bildirimi)
@@ -16,7 +16,7 @@ sonra **Onaya gönder** → karşı tarafa bildirim gider → onaylanınca konfe
 | 🟩 Yeşil | İkiniz de boşsunuz → dokun, "Bu günü ayır & date planla" |
 | 🟥 Kırmızı | En az biriniz dolu (altındaki renkli nokta kimin dolu olduğunu gösterir) |
 | 🟨 Çizgili sarı | Planlanıyor: taslak ya da onay bekliyor |
-| 💗 Pembe kalp | Date günü (onaylandı) |
+| 🟧 Turuncu ✦ | Date günü (onaylandı) |
 
 **Dolu günlerim** modunda günlere tek tek dokunarak dolu/boş işaretlersin.
 

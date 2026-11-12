@@ -6,10 +6,10 @@ export function notifText(n: Pick<AppNotification, 'type' | 'fromName' | 'date' 
   const t = n.title ? ` · ${n.title}` : '';
   switch (n.type) {
     case 'draft': return { icon: '✏️', title: `${n.fromName} ${d} için date taslağı açtı`, body: 'Sen de etkinlik ekleyebilirsin' };
-    case 'request': return { icon: '💌', title: `${n.fromName} seni date'e çağırıyor!`, body: `${d}${t}` };
+    case 'request': return { icon: '📅', title: `${n.fromName} bir date önerdi`, body: `${d}${t}` };
     case 'accepted': return { icon: '🎉', title: `${n.fromName} date'i onayladı!`, body: `${d}${t}` };
     case 'returned': return { icon: '↩️', title: `${n.fromName} planı düzenlemek istiyor`, body: `${d}${t}` };
-    case 'cancelled': return { icon: '💔', title: `${n.fromName} date'i iptal etti`, body: `${d}${t}` };
+    case 'cancelled': return { icon: '✖️', title: `${n.fromName} date'i iptal etti`, body: `${d}${t}` };
   }
 }
 

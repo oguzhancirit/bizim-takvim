@@ -17,12 +17,12 @@ export function Celebration({ plan, onClose }: { plan: Pick<Plan, 'date' | 'titl
             transition={{ type: 'spring', stiffness: 300, damping: 18 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="big-heart beat">♥</div>
+            <div className="big-emoji pop">🎉</div>
             <p className="eyebrow">Date ayarlandı!</p>
-            <h2>{plan.title || 'Bizim günümüz'}</h2>
+            <h2>{plan.title || 'Date'}</h2>
             <p className="cele-date">{longDate(plan.date)}{plan.time ? ` · ${plan.time}` : ''}</p>
             {plan.place && <p className="cele-place">📍 {plan.place}</p>}
-            <button className="btn primary" onClick={onClose}>Yaşasın 💕</button>
+            <button className="btn primary" onClick={onClose}>Harika!</button>
           </motion.div>
         </motion.div>
       )}

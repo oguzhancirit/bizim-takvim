@@ -25,11 +25,11 @@ function text(n) {
   const t = n.title ? ` · ${n.title}` : '';
   switch (n.type) {
     case 'draft': return { title: `✏️ ${n.fromName} date taslağı açtı`, body: `${d} — sen de etkinlik ekleyebilirsin` };
-    case 'request': return { title: `💌 ${n.fromName} seni date'e çağırıyor!`, body: `${d}${t} — onaylamak için dokun` };
+    case 'request': return { title: `📅 ${n.fromName} bir date önerdi`, body: `${d}${t} — onaylamak için dokun` };
     case 'accepted': return { title: `🎉 ${n.fromName} date'i onayladı!`, body: `${d}${t}` };
     case 'returned': return { title: `↩️ ${n.fromName} planı düzenlemek istiyor`, body: `${d}${t}` };
-    case 'cancelled': return { title: `💔 ${n.fromName} date'i iptal etti`, body: `${d}${t}` };
-    default: return { title: 'Bizim Takvim', body: d };
+    case 'cancelled': return { title: `✖️ ${n.fromName} date'i iptal etti`, body: `${d}${t}` };
+    default: return { title: 'Date Takvimi', body: d };
   }
 }
 

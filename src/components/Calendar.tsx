@@ -95,8 +95,8 @@ export function Calendar({ infoFor, onDay, me, partner, busyMode }: Props) {
                   aria-label={`${c.day}, ${LABEL[info.state]}${info.meBusy ? ', sen dolusun' : ''}${info.partnerBusy ? `, ${partner?.name ?? 'partnerin'} dolu` : ''}`}
                 >
                   <span className="num">{c.day}</span>
-                  {info.state === 'date' && <span className="heart beat" aria-hidden>♥</span>}
-                  {(info.state === 'draft' || info.state === 'pending') && <span className="mini-heart" aria-hidden>♡</span>}
+                  {info.state === 'date' && <span className="mark" aria-hidden>✦</span>}
+                  {(info.state === 'draft' || info.state === 'pending') && <span className="mini-mark" aria-hidden>✎</span>}
                   {info.state !== 'past' && (info.meBusy || info.partnerBusy) && (
                     <span className="who" aria-hidden>
                       {info.meBusy && <i style={{ background: personColor(me.uid, [me, partner]) }} />}

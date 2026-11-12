@@ -158,7 +158,6 @@ export default function Home({ user }: { user: User }) {
       <header className="topbar">
         <button className="couple" onClick={() => setShowMenu(true)} aria-label="Menü">
           <Avatar person={me} color={personColor(me.uid, [me, partner])} size={38} ring />
-          <span className="couple-heart">♥</span>
           <Avatar person={partner} color={personColor(partner?.uid ?? '', [me, partner])} size={38} ring />
         </button>
         <div className="hello">
@@ -204,10 +203,10 @@ export default function Home({ user }: { user: User }) {
             exit={{ opacity: 0, y: -10 }}
             transition={spring}
           >
-            <span className="hero-emoji wiggle">💌</span>
+            <span className="hero-emoji wiggle">📅</span>
             <span>
-              <small>{pName} seni date'e çağırıyor</small>
-              <strong>{waitingForMe.title || 'Bir sürpriz'}</strong>
+              <small>{pName} bir date önerdi</small>
+              <strong>{waitingForMe.title || 'Yeni date'}</strong>
               <em>{longDate(waitingForMe.date)} · Bakmak için dokun</em>
             </span>
           </motion.button>
@@ -227,7 +226,7 @@ export default function Home({ user }: { user: User }) {
             </span>
             <span>
               <small>Sıradaki date</small>
-              <strong>{nextDate.title || 'Bizim günümüz'}</strong>
+              <strong>{nextDate.title || 'Date'}</strong>
               <em>
                 {longDate(nextDate.date)}
                 {nextDate.time ? ` · ${nextDate.time}` : ''}
@@ -247,7 +246,7 @@ export default function Home({ user }: { user: User }) {
 
       <div className="mode" role="tablist" aria-label="Mod">
         {[
-          { v: false, t: '💕 Date planla' },
+          { v: false, t: '✨ Date planla' },
           { v: true, t: '📅 Dolu günlerim' },
         ].map((o) => (
           <button key={String(o.v)} role="tab" aria-selected={busyMode === o.v} className={busyMode === o.v ? 'active' : ''} onClick={() => setBusyMode(o.v)}>

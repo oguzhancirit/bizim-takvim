@@ -64,7 +64,7 @@ export function DayPanel({ day, info, me, partner, onToast }: Props) {
           </motion.div>
         ) : info.meBusy || info.partnerBusy ? (
           <motion.p key="busy" className="hint busy-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            {info.meBusy && info.partnerBusy ? 'İkiniz de bu gün dolusunuz.' : info.meBusy ? 'Bu gün sen dolusun.' : `${pName} bu gün dolu.`} Date için yeşil günlere bak 💚
+            {info.meBusy && info.partnerBusy ? 'İkiniz de bu gün dolusunuz.' : info.meBusy ? 'Bu gün sen dolusun.' : `${pName} bu gün dolu.`} Date için yeşil günlere bak.
           </motion.p>
         ) : (
           <motion.div key="free" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
@@ -76,7 +76,7 @@ export function DayPanel({ day, info, me, partner, onToast }: Props) {
               disabled={busyAction}
               onClick={() => run(() => createPlan(day, me, partner), `Gün ayrıldı! ${pName} da taslağa ekleme yapabilir`)}
             >
-              <span className="btn-heart">♥</span> Bu günü ayır & date planla
+              Bu günü ayır & date planla
             </motion.button>
           </motion.div>
         )}
@@ -109,7 +109,7 @@ function Planner({
 
   const ribbon =
     plan.status === 'accepted'
-      ? { cls: 'date', text: 'Date ayarlandı 💖' }
+      ? { cls: 'date', text: 'Date ayarlandı ✓' }
       : plan.status === 'pending'
         ? { cls: 'pending', text: sentByMe ? `${pName} onayını bekliyor` : `${pName} onayını istiyor` }
         : { cls: 'draft', text: 'Taslak · ikiniz de düzenleyebilirsiniz' };
@@ -192,9 +192,9 @@ function Planner({
               className="btn primary big"
               whileTap={{ scale: 0.96 }}
               disabled={busy || !canSend}
-              onClick={() => run(() => sendForApproval(plan, me, partner), `${pName}'a onay isteği gitti 💌`)}
+              onClick={() => run(() => sendForApproval(plan, me, partner), `${pName}'a onay isteği gitti 📨`)}
             >
-              Onaya gönder 💌
+              Onaya gönder
             </motion.button>
             {!canSend && <p className="hint small">Göndermek için bir başlık ya da etkinlik ekle.</p>}
           </>
@@ -208,7 +208,7 @@ function Planner({
               disabled={busy}
               onClick={() => run(async () => { await acceptPlan(plan, me, partner); celebrate(); }, 'Date ayarlandı! 🎉')}
             >
-              Onayla 💖
+              Onayla ✓
             </motion.button>
             <button className="btn ghost" disabled={busy} onClick={() => run(() => returnToDraft(plan, me, partner), 'Taslağa geri döndü')}>
               Değiştirmek istiyorum
