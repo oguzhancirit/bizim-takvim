@@ -11,6 +11,6 @@ export const firebaseConfig = {
 };
 
 // Firebase konsolu → Proje ayarları → Cloud Messaging → Web Push sertifikaları → "Anahtar çifti" (public key)
-export const vapidKey = 'BURAYA_VAPID_PUBLIC_KEY';
+export const vapidKey = 'BGEQqaaUTbKKS_SK1Q-AahXbb4F1FwIrn2EC66xJzUABPpABhbusOawTLKvxrk1wriS7AoDa26Ro3C5ujXIRVYc';
 
 export const isConfigured = !firebaseConfig.apiKey.startsWith('BURAYA');
