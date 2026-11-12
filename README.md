@@ -93,3 +93,12 @@ sade CSS + `motion` ile yeniden yazıldı: [`src/components/magic/`](src/compone
 | Floating 3D Particles | Giriş arka planı, kutlama kartı |
 
 Telefonda "Hareketi azalt" açıksa hepsi durur.
+
+## Veri güvenliği
+- **Hiçbir şey silinmez.** Güvenlik kuralları uygulamanın belge silmesini engeller. "Taslağı sil" / "Date'i iptal et"
+  planı `status: 'cancelled'` yapar ve gizler; silinen etkinlikler `removedActivities` içinde saklanır.
+- **Günlük yedek:** `Günlük yedek` iş akışı her gece tüm verileri Firestore'da uygulamanın erişemediği
+  `backups/YYYY-MM-DD` alanına kopyalar (60 gün).
+- **Geri yükleme:** GitHub → Actions → **Yedekten geri yükle** → tarih gir. Önce "uygula" kapalı çalıştırıp raporu oku;
+  sonra açık çalıştır. Geri yükleme hiçbir belgeyi silmez, sadece eksik/değişmiş olanları yedekteki haline getirir.
+- Yazarken uygulama kapansa bile bekleyen metin hemen kaydedilir; internet yoksa telefonda tutulur, bağlanınca gönderilir.

@@ -255,7 +255,15 @@ input:disabled { background: transparent; border-color: transparent; padding-lef
 .row2 { display: flex; gap: 10px; }
 .mini-field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); font-weight: 600; }
 .mini-field.grow { flex: 1; min-width: 0; }
-.mini-field input[type='time'] { min-width: 108px; }
+.row2 { align-items: flex-end; }
+.mini-field input { height: 48px; }
+.mini-field input[type='time'] {
+  min-width: 112px; -webkit-appearance: none; appearance: none; display: flex; align-items: center;
+  line-height: 1.2; padding-top: 0; padding-bottom: 0;
+}
+.mini-field input[type='time']::-webkit-date-and-time-value { text-align: left; margin: 0; }
+.activities li { flex-shrink: 0; }
+.sheet { transition: margin-bottom .2s ease, max-height .2s ease; }
 .section-label { margin: 8px 0 0; font-size: 12.5px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
 .activities { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .activities li { display: flex; align-items: center; gap: 8px; overflow: hidden; }
@@ -537,3 +545,14 @@ input:disabled { background: transparent; border-color: transparent; padding-lef
 .blur-words span { display: inline-block; }
 .promise-btn { min-width: 240px; font-size: 18px !important; }
 .landing .land-hero, .landing .land-cta { isolation: isolate; }
+
+/* Bildirim testi (zil panelinin altı) */
+.push-test { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 6px; }
+.push-test-toggle { width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; font-size: 13.5px; font-weight: 600; color: var(--muted); border-radius: 12px; }
+.push-test-toggle:hover { background: var(--surface-2); }
+.chev { display: inline-block; transition: transform .2s; line-height: 1; }
+.chev.up { transform: rotate(180deg); }
+.push-test-body { overflow: hidden; }
+.push-test-in { display: flex; flex-direction: column; gap: 8px; padding: 6px 2px 4px; }
+.pt-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; padding: 8px 12px; background: var(--surface-2); border-radius: 12px; }
+.pt-row span { color: var(--muted); }

@@ -116,13 +116,13 @@ function Planner({
 
   return (
     <div className="planner">
-      <motion.div layout className={`ribbon ${ribbon.cls}`} transition={spring}>
+      <div className={`ribbon ${ribbon.cls}`}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.span key={ribbon.text} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.2 }}>
             {ribbon.text}
           </motion.span>
         </AnimatePresence>
-      </motion.div>
+      </div>
 
       <SyncedInput
         className="title-field"
@@ -144,16 +144,15 @@ function Planner({
       </div>
 
       <h4 className="section-label">Etkinlikler</h4>
-      <motion.ul layout className="activities">
+      <ul className="activities">
         <AnimatePresence initial={false}>
           {plan.activities.map((a) => (
             <motion.li
               key={a.id}
-              layout
-              initial={{ opacity: 0, x: -16, height: 0 }}
-              animate={{ opacity: 1, x: 0, height: 'auto' }}
-              exit={{ opacity: 0, x: 24, height: 0 }}
-              transition={spring}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
             >
               <Avatar person={who(a.by)} color={color(who(a.by))} size={24} />
               <SyncedInput
@@ -170,7 +169,7 @@ function Planner({
           ))}
         </AnimatePresence>
         {plan.activities.length === 0 && !editable && <li className="empty">Etkinlik eklenmemiş</li>}
-      </motion.ul>
+      </ul>
 
       {editable && (
         <form

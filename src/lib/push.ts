@@ -1,5 +1,5 @@
 import { getMessaging, getToken, isSupported, onMessage } from 'firebase/messaging';
-import { arrayUnion, doc, setDoc } from 'firebase/firestore';
+import { arrayUnion, doc, getDoc, setDoc } from 'firebase/firestore';
 import { app, db } from '../firebase';
 import { vapidKey } from '../firebase-config';
 
@@ -35,4 +35,33 @@ export async function enablePush(uid: string) {
 export async function listenForeground() {
   if (!(await isSupported())) return;
   onMessage(getMessaging(app), () => {});
+}
+
+/** Bildirim durumu: izin + bu cihazın jetonu hesaba kayıtlı mı. İzin isteği açmaz. */
+export async function pushDiagnostics(uid: string): Promise<{ state: PushState; registered: boolean }> {
+  const state = await pushState();
+  if (state !== 'granted') return { state, registered: false };
+  try {
+    const reg = (await registerSW()) ?? undefined;
+    const token = await getToken(getMessaging(app), { vapidKey, serviceWorkerRegistration: reg });
+    const snap = await getDoc(doc(db, 'users', uid));
+    const tokens = (snap.data()?.tokens as string[] | undefined) ?? [];
+    if (token && !tokens.includes(token)) {
+      // Jeton değişmiş/eksikse sessizce kaydet ki bildirimler kaçmasın
+      await setDoc(doc(db, 'users', uid), { tokens: arrayUnion(token) }, { merge: true });
+    }
+    return { state, registered: !!token };
+  } catch {
+    return { state, registered: false };
+  }
+}
+
+/** Cihazın bildirim gösterebildiğini anında dener (sunucuya gitmez). */
+export async function localTestNotification() {
+  const reg = await navigator.serviceWorker.ready;
+  await reg.showNotification('🔔 Test bildirimi', {
+    body: 'Bu cihaz bildirim gösterebiliyor 🎉',
+    icon: `${import.meta.env.BASE_URL}icons/icon-192.png`,
+    tag: 'test-local',
+  });
 }

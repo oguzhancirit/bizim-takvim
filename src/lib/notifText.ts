@@ -9,6 +9,7 @@ export function notifText(n: Pick<AppNotification, 'type' | 'fromName' | 'date' 
     case 'request': return { icon: '📅', title: `${n.fromName} bir date önerdi`, body: `${d}${t}` };
     case 'accepted': return { icon: '🎉', title: `${n.fromName} date'i onayladı!`, body: `${d}${t}` };
     case 'returned': return { icon: '↩️', title: `${n.fromName} planı düzenlemek istiyor`, body: `${d}${t}` };
+    case 'test': return { icon: '🔔', title: 'Test bildirimi', body: 'Bildirimler bu hesaba ulaşıyor 🎉' };
     case 'cancelled': return { icon: '✖️', title: `${n.fromName} date'i iptal etti`, body: `${d}${t}` };
   }
 }

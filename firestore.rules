@@ -21,18 +21,26 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // VERİ KAYBI YOK: uygulama hiçbir belgeyi silemez. Plan "silme" = status: 'cancelled'.
     match /users/{uid} {
       allow read: if isAllowed();
-      allow write: if isAllowed() && request.auth.uid == uid;
+      allow create, update: if isAllowed() && request.auth.uid == uid;
+      allow delete: if false;
     }
 
     match /busy/{uid} {
       allow read: if isAllowed();
-      allow write: if isAllowed() && request.auth.uid == uid;
+      allow create, update: if isAllowed() && request.auth.uid == uid;
+      allow delete: if false;
     }
 
     match /plans/{planId} {
-      allow read, write: if isAllowed();
+      allow read, create: if isAllowed();
+      // Planın tarihi ve kimin açtığı sonradan değiştirilemez
+      allow update: if isAllowed()
+                    && request.resource.data.date == resource.data.date
+                    && request.resource.data.createdBy == resource.data.createdBy;
+      allow delete: if false;
     }
 
     match /notifications/{id} {
@@ -41,6 +49,11 @@ service cloud.firestore {
       allow update: if isAllowed() && resource.data.toEmail == myEmail()
                     && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
       allow delete: if false;
+    }
+
+    // Günlük yedekler: sadece sunucu (GitHub Actions) okur/yazar, uygulamadan erişilemez.
+    match /backups/{id=**} {
+      allow read, write: if false;
     }
   }
 }

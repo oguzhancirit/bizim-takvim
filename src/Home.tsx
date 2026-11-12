@@ -26,7 +26,7 @@ import { SpinningText } from './components/magic/SpinningText';
 import { TextReveal } from './components/magic/TextReveal';
 import { monthGrid } from './lib/dates';
 
-const STATUS_ORDER = { accepted: 0, pending: 1, draft: 2 } as const;
+const STATUS_ORDER = { accepted: 0, pending: 1, draft: 2, cancelled: 3 } as const;
 
 export default function Home({ user }: { user: User }) {
   const { me, partner } = usePeople(user);
@@ -78,7 +78,7 @@ export default function Home({ user }: { user: User }) {
       const plan = plansByDay.get(key);
       const meBusy = busy[me.uid]?.has(key) ?? false;
       const partnerBusy = partner?.uid ? (busy[partner.uid]?.has(key) ?? false) : false;
-      const state = plan
+      const state: DayInfo['state'] = plan && plan.status !== 'cancelled'
         ? plan.status === 'accepted'
           ? 'date'
           : plan.status
@@ -316,7 +316,7 @@ export default function Home({ user }: { user: User }) {
       </Sheet>
 
       <Sheet open={showNotifs} onClose={() => setShowNotifs(false)} label="Bildirimler">
-        <NotificationList items={notifs} onOpen={openFromNotif} />
+        <NotificationList items={notifs} onOpen={openFromNotif} me={me} onToast={showToast} />
       </Sheet>
 
       <Sheet open={showMenu} onClose={() => setShowMenu(false)} label="Menü">

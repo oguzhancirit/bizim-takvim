@@ -28,6 +28,7 @@ function text(n) {
     case 'request': return { title: `📅 ${n.fromName} bir date önerdi`, body: `${d}${t} — onaylamak için dokun` };
     case 'accepted': return { title: `🎉 ${n.fromName} date'i onayladı!`, body: `${d}${t}` };
     case 'returned': return { title: `↩️ ${n.fromName} planı düzenlemek istiyor`, body: `${d}${t}` };
+    case 'test': return { title: '🔔 Test bildirimi', body: 'Telefon bildirimlerin çalışıyor 🎉' };
     case 'cancelled': return { title: `✖️ ${n.fromName} date'i iptal etti`, body: `${d}${t}` };
     default: return { title: 'Date Takvimi', body: d };
   }
@@ -40,7 +41,8 @@ console.log(`${snap.size} bekleyen bildirim`);
 for (const docSnap of snap.docs) {
   const n = docSnap.data();
   const age = Date.now() - (n.createdAt?.toMillis?.() ?? Date.now());
-  if (n.read || age > DAY) {
+  // Test bildirimi uygulamada okunmuş olsa da telefona gönderilir.
+  if ((n.read && n.type !== 'test') || age > DAY) {
     await docSnap.ref.update({ pushed: true });
     continue;
   }

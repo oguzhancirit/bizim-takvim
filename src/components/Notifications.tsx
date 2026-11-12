@@ -1,8 +1,9 @@
 import { AnimatePresence, motion } from 'motion/react';
-import type { AppNotification } from '../types';
+import type { AppNotification, Person } from '../types';
+import { PushTest } from './PushTest';
 import { notifText, timeAgo } from '../lib/notifText';
 
-export function NotificationList({ items, onOpen }: { items: AppNotification[]; onOpen: (n: AppNotification) => void }) {
+export function NotificationList({ items, onOpen, me, onToast }: { items: AppNotification[]; onOpen: (n: AppNotification) => void; me: Person; onToast: (m: string) => void }) {
   return (
     <div>
       <h3 className="panel-title">Bildirimler</h3>
@@ -27,6 +28,7 @@ export function NotificationList({ items, onOpen }: { items: AppNotification[]; 
           })}
         </ul>
       )}
+      <PushTest me={me} onToast={onToast} />
     </div>
   );
 }

@@ -27,11 +27,42 @@ export function Avatar({ person, color, size = 32, ring = false }: { person: Per
 /** Alttan açılan sayfa: yaylı giriş, aşağı sürükleyerek kapatma, Esc ile kapatma. */
 export function Sheet({ open, onClose, children, label }: { open: boolean; onClose: () => void; children: ReactNode; label: string }) {
   const controls = useDragControls();
+  const [kb, setKb] = useState({ bottom: 0, height: 0 });
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+
+    // Arka sayfa kaymasın (iPhone klavye açınca tüm sayfayı kaydırıp öğeleri üst üste bindiriyordu)
+    const html = document.documentElement;
+    const prevOverflow = html.style.overflow;
+    html.style.overflow = 'hidden';
+
+    // Klavye: görünür alan küçülünce panel klavyenin üstünde dursun ve yüksekliği ona göre ayarlansın
+    const vv = window.visualViewport;
+    const update = () => {
+      if (!vv) return;
+      const bottom = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
+      setKb({ bottom, height: vv.height });
+    };
+    vv?.addEventListener('resize', update);
+    vv?.addEventListener('scroll', update);
+    update();
+
+    // Odaklanan kutuyu panelin içinde görünür yere kaydır
+    const onFocus = (e: FocusEvent) => {
+      const t = e.target as HTMLElement;
+      if (t.matches('input, textarea')) setTimeout(() => t.scrollIntoView({ block: 'center', behavior: 'smooth' }), 300);
+    };
+    document.addEventListener('focusin', onFocus);
+
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      html.style.overflow = prevOverflow;
+      vv?.removeEventListener('resize', update);
+      vv?.removeEventListener('scroll', update);
+      document.removeEventListener('focusin', onFocus);
+    };
   }, [open, onClose]);
 
   return (
@@ -44,6 +75,7 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
             aria-modal="true"
             aria-label={label}
             className="sheet"
+            style={kb.bottom > 0 ? { marginBottom: kb.bottom, maxHeight: kb.height - 8 } : undefined}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
@@ -79,6 +111,27 @@ export function SyncedInput({
   useEffect(() => {
     if (!focused.current) setLocal(value);
   }, [value]);
+
+  // Yazı kaybolmasın: sayfa kapanırken/arka plana geçerken bekleyen değişikliği hemen gönder
+  const latest = useRef({ local, value, onSave });
+  latest.current = { local, value, onSave };
+  useEffect(() => {
+    const save = () => {
+      const { local: l, value: v, onSave: s } = latest.current;
+      if (focused.current && l !== v) {
+        window.clearTimeout(timer.current);
+        s(l);
+      }
+    };
+    const onVis = () => document.visibilityState === 'hidden' && save();
+    window.addEventListener('pagehide', save);
+    document.addEventListener('visibilitychange', onVis);
+    return () => {
+      save();
+      window.removeEventListener('pagehide', save);
+      document.removeEventListener('visibilitychange', onVis);
+    };
+  }, []);
 
   const flush = (v: string) => {
     window.clearTimeout(timer.current);

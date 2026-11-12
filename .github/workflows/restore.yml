@@ -1,0 +1,31 @@
+name: Yedekten geri yükle
+
+# Elle çalıştırılır. Önce "uygula" kapalıyken çalıştırıp raporu oku; hiçbir şey silinmez.
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Yedek tarihi (YYYY-MM-DD)'
+        required: true
+      apply:
+        description: 'Gerçekten geri yükle (kapalıysa sadece rapor)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node scripts/restore.mjs "${{ inputs.date }}" ${{ inputs.apply && '--apply' || '' }}
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}

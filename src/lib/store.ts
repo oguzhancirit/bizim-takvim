@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import {
-  addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, onSnapshot, query,
+  addDoc, arrayRemove, arrayUnion, collection, doc, getDoc, onSnapshot, query,
   runTransaction, serverTimestamp, setDoc, updateDoc, where, writeBatch,
 } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import type { Activity, AppNotification, NotifType, Person, Plan } from '../types';
-import { firstName } from './dates';
+import { firstName, todayKey } from './dates';
 
 /* ---------------- Oturum ve erişim ---------------- */
 
@@ -97,7 +97,8 @@ export function usePlans() {
   useEffect(
     () =>
       onSnapshot(collection(db, 'plans'), (s) =>
-        setPlans(s.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Plan, 'id'>) }))),
+        // İptal edilen planlar veritabanında kalır, sadece ekranda gösterilmez.
+        setPlans(s.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Plan, 'id'>) })).filter((p) => p.status !== 'cancelled')),
       ),
     [],
   );
@@ -157,9 +158,18 @@ export const changeActivity = (id: string, uid: string, activityId: string, text
     const snap = await tx.get(ref);
     if (!snap.exists()) return;
     const list = (snap.data().activities as Activity[]) ?? [];
-    const next = text === null
-      ? list.filter((a) => a.id !== activityId)
-      : list.map((a) => (a.id === activityId ? { ...a, text } : a));
+    if (text === null) {
+      // Silinen etkinlik kaybolmasın: removedActivities içine arşivlenir.
+      const gone = list.find((a) => a.id === activityId);
+      tx.update(ref, {
+        activities: list.filter((a) => a.id !== activityId),
+        ...(gone ? { removedActivities: arrayUnion({ ...gone, removedBy: uid, removedAt: Date.now() }) } : {}),
+        updatedBy: uid,
+        updatedAt: serverTimestamp(),
+      });
+      return;
+    }
+    const next = list.map((a) => (a.id === activityId ? { ...a, text } : a));
     tx.update(ref, { activities: next, updatedBy: uid, updatedAt: serverTimestamp() });
   });
 
@@ -179,9 +189,21 @@ export async function returnToDraft(plan: Plan, me: Person, partner: Person | nu
   if (!wasMine) await notify(partner, me, 'returned', plan);
 }
 
+/** Plan silinmez: 'cancelled' olarak işaretlenir, önceki durumu saklanır (geri getirilebilir). */
 export async function cancelPlan(plan: Plan, me: Person, partner: Person | null) {
-  await deleteDoc(doc(db, 'plans', plan.id));
+  await updateDoc(doc(db, 'plans', plan.id), {
+    status: 'cancelled', statusBeforeCancel: plan.status, cancelledBy: me.uid, cancelledAt: serverTimestamp(),
+    updatedBy: me.uid, updatedAt: serverTimestamp(),
+  });
   await notify(partner, me, 'cancelled', plan);
+}
+
+/** Kendine test bildirimi: uygulama içinde hemen görünür, telefona GitHub Actions ile 5–15 dk içinde gelir. */
+export async function sendTestNotification(me: Person) {
+  await addDoc(collection(db, 'notifications'), {
+    toEmail: me.email, fromName: firstName(me.name), type: 'test', planId: '', date: todayKey(),
+    title: '', read: false, pushed: false, createdAt: serverTimestamp(),
+  });
 }
 
 export async function markRead(ids: string[]) {

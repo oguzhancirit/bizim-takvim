@@ -1,6 +1,7 @@
 import type { Timestamp } from 'firebase/firestore';
 
-export type PlanStatus = 'draft' | 'pending' | 'accepted';
+/** 'cancelled': silinmiş/iptal edilmiş plan. Veri asla silinmez, sadece bu durumla gizlenir. */
+export type PlanStatus = 'draft' | 'pending' | 'accepted' | 'cancelled';
 
 export interface Person {
   uid: string;
@@ -24,6 +25,8 @@ export interface Plan {
   time: string; // HH:MM veya ''
   place: string;
   activities: Activity[];
+  /** Silinen etkinlikler kaybolmaz; buraya taşınır (geri getirilebilir). */
+  removedActivities?: (Activity & { removedBy: string; removedAt: number })[];
   status: PlanStatus;
   createdBy: string; // uid
   sentBy?: string; // onaya gönderen uid
@@ -31,7 +34,7 @@ export interface Plan {
   updatedAt?: Timestamp;
 }
 
-export type NotifType = 'draft' | 'request' | 'accepted' | 'returned' | 'cancelled';
+export type NotifType = 'draft' | 'request' | 'accepted' | 'returned' | 'cancelled' | 'test';
 
 export interface AppNotification {
   id: string;
