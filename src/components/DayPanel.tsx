@@ -205,7 +205,7 @@ function Planner({
               className="big glow"
               duration="2s"
               disabled={busy}
-              onClick={() => run(async () => { await acceptPlan(plan, me, partner); celebrate(); }, 'Date ayarlandı! 🎉')}
+              onClick={(e) => { const el = e.currentTarget; run(async () => { await acceptPlan(plan, me, partner); celebrate(el); }, 'Date ayarlandı! 🎉'); }}
             >
               Onayla ✓
             </ShimmerButton>

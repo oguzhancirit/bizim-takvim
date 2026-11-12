@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { AnimatedGradientText, GradientPill } from './magic/AnimatedGradientText';
 import { DiaTextReveal } from './magic/DiaTextReveal';
 import { DotPattern } from './magic/DotPattern';
+import { Aurora } from './magic/Aurora';
 import { Floating3DParticles } from './magic/Floating3DParticles';
 import { ScrollVelocityContainer, ScrollVelocityRow } from './magic/ScrollVelocity';
 import { ShimmerButton } from './magic/ShimmerButton';
@@ -54,8 +55,9 @@ export function Login({ onSignIn }: { onSignIn: () => Promise<void> }) {
   return (
     <main className="landing">
       <section className="land-hero">
-        <DotPattern glow className="land-dots" />
-        <Floating3DParticles className="land-particles" />
+        <Aurora />
+        <DotPattern glow glowCount={48} className="land-dots" />
+        <Floating3DParticles quantity={420} mobileFactor={0.45} />
         <div className="land-hero-in">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
             <GradientPill>

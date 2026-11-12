@@ -44,7 +44,7 @@ export function useSession() {
 /** İki kişiyi döndürür: ben ve partnerim (partner henüz hiç giriş yapmadıysa allowed listesinden). */
 export function usePeople(me: User) {
   const [users, setUsers] = useState<Person[]>([]);
-  const [allowed, setAllowed] = useState<{ email: string; name?: string }[]>([]);
+  const [allowed, setAllowed] = useState<{ email: string; name?: string; nick?: string }[]>([]);
 
   useEffect(
     () =>
@@ -56,7 +56,7 @@ export function usePeople(me: User) {
   useEffect(
     () =>
       onSnapshot(collection(db, 'allowed'), (s) =>
-        setAllowed(s.docs.map((d) => ({ email: d.id, name: d.data().name as string | undefined }))),
+        setAllowed(s.docs.map((d) => ({ email: d.id, name: d.data().name as string | undefined, nick: d.data().nick as string | undefined }))),
       ),
     [],
   );
@@ -69,9 +69,9 @@ export function usePeople(me: User) {
     const otherAllowed = allowed.find((a) => a.email !== myEmail);
     const otherUser = users.find((u) => u.uid !== me.uid);
     const partner: Person | null = otherUser
-      ? { ...otherUser, name: otherAllowed?.name || otherUser.name }
+      ? { ...otherUser, name: otherAllowed?.name || otherUser.name, nick: otherAllowed?.nick }
       : otherAllowed
-        ? { uid: '', email: otherAllowed.email, name: otherAllowed.name || otherAllowed.email.split('@')[0] }
+        ? { uid: '', email: otherAllowed.email, name: otherAllowed.name || otherAllowed.email.split('@')[0], nick: otherAllowed.nick }
         : null;
     const myName = allowed.find((a) => a.email === myEmail)?.name;
     return { me: { ...meP, name: myName || meP.name }, partner };

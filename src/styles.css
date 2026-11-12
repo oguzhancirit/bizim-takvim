@@ -398,8 +398,8 @@ input:disabled { background: transparent; border-color: transparent; padding-lef
 .spin-text > span { position: absolute; left: 0; top: 0; }
 
 /* Dot Pattern */
-.dot-pattern { position: absolute; inset: 0; width: 100%; height: 100%; color: color-mix(in srgb, var(--muted) 35%, transparent); pointer-events: none; }
-.dot-glow { animation: dot-glow 3s ease-in-out infinite alternate; opacity: .2; }
+.dot-pattern { position: absolute; inset: 0; width: 100%; height: 100%; color: color-mix(in srgb, var(--muted) 50%, transparent); pointer-events: none; }
+.dot-glow { animation: dot-glow 3s ease-in-out infinite alternate; opacity: .2; transform-box: fill-box; transform-origin: center; }
 @keyframes dot-glow { from { opacity: .15; transform: scale(1); } to { opacity: .9; transform: scale(1.6); } }
 
 /* Floating 3D Particles */
@@ -461,7 +461,8 @@ input:disabled { background: transparent; border-color: transparent; padding-lef
    Ana ekran eklemeleri
    ========================================================= */
 .app { position: relative; isolation: isolate; padding-bottom: calc(28vh + env(safe-area-inset-bottom)); }
-.app > .app-dots { position: fixed; inset: 0; z-index: -1; -webkit-mask-image: linear-gradient(180deg, #000, transparent 45%); mask-image: linear-gradient(180deg, #000, transparent 45%); }
+.app-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.app-dots { -webkit-mask-image: linear-gradient(180deg, #000, transparent 70%); mask-image: linear-gradient(180deg, #000, transparent 70%); }
 .hero strong.dia, .hero .dia { font-family: var(--serif); font-size: 20px; font-weight: 600; }
 .countdown-orbit { position: relative; width: 104px; height: 104px; display: grid; place-items: center; flex-shrink: 0; margin: -10px -6px -10px -10px; }
 .countdown-orbit .spin-text { font-size: 9px; }
@@ -485,3 +486,33 @@ input:disabled { background: transparent; border-color: transparent; padding-lef
   .agt, .dia { color: var(--ink); -webkit-text-fill-color: currentColor; background: none; }
   .shimmer-spark, .shimmer-slide { display: none; }
 }
+
+/* =========================================================
+   Aurora (hareketli renk lekeleri) — sadece transform animasyonu
+   ========================================================= */
+.aurora { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.blob { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; will-change: transform; opacity: .55; }
+.blob.b1 { left: -25vmax; top: -25vmax; background: radial-gradient(circle, color-mix(in srgb, var(--rose) 45%, transparent), transparent 62%); animation: drift1 18s ease-in-out infinite alternate; }
+.blob.b2 { right: -30vmax; top: 10vh; background: radial-gradient(circle, color-mix(in srgb, var(--p2) 38%, transparent), transparent 62%); animation: drift2 22s ease-in-out infinite alternate; }
+.blob.b3 { left: 5vw; bottom: -40vmax; background: radial-gradient(circle, color-mix(in srgb, var(--amber) 40%, transparent), transparent 62%); animation: drift3 26s ease-in-out infinite alternate; }
+@keyframes drift1 { to { transform: translate3d(22vw, 18vh, 0) scale(1.15); } }
+@keyframes drift2 { to { transform: translate3d(-26vw, 22vh, 0) scale(.9); } }
+@keyframes drift3 { to { transform: translate3d(18vw, -26vh, 0) scale(1.2); } }
+@media (prefers-color-scheme: dark) { .blob { opacity: .4; } }
+
+/* =========================================================
+   Açılış hatırlatması
+   ========================================================= */
+.reminder { position: fixed; inset: 0; z-index: 950; background: var(--bg); display: grid; place-items: center; overflow: hidden; padding: max(24px, env(safe-area-inset-top)) 20px max(28px, env(safe-area-inset-bottom)); }
+.reminder-dots { -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0, transparent 72%); mask-image: radial-gradient(circle at 50% 45%, #000 0, transparent 72%); }
+.reminder-in { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; max-width: 440px; width: 100%; }
+.reminder-orbit { position: relative; width: 200px; height: 200px; display: grid; place-items: center; margin-bottom: 4px; }
+.reminder-orbit .spin-text { font-size: 10.5px; }
+.reminder-emoji { font-size: 64px; filter: drop-shadow(0 10px 22px color-mix(in srgb, var(--rose) 35%, transparent)); animation: float-y 3.2s ease-in-out infinite; }
+@keyframes float-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.reminder-name { margin: 0; font-family: var(--serif); font-size: clamp(54px, 16vw, 80px); line-height: 1; letter-spacing: -.025em; font-weight: 700; }
+.reminder-line { margin: 0; font-family: var(--serif); font-size: clamp(28px, 8vw, 40px); line-height: 1.15; font-weight: 600; letter-spacing: -.01em; }
+.blur-words { margin: 10px 0 18px; color: var(--muted); font-size: 16.5px; line-height: 1.5; max-width: 320px; display: flex; flex-wrap: wrap; justify-content: center; gap: 0 .3em; }
+.blur-words span { display: inline-block; }
+.promise-btn { min-width: 240px; font-size: 18px !important; }
+.landing .land-hero, .landing .land-cta { isolation: isolate; }

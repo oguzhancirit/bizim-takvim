@@ -37,3 +37,12 @@ export function daysUntil(k: string) {
 }
 
 export const firstName = (name: string) => name.trim().split(/\s+/)[0] || name;
+
+/** Türkçe yönelme eki: Can → Can'ye, Ece → Ece'ye, Can → Can'a. */
+export function dative(name: string) {
+  const vowels = 'aeıioöuü';
+  const lower = name.toLocaleLowerCase('tr-TR');
+  const last = [...lower].reverse().find((c) => vowels.includes(c)) ?? 'e';
+  const suffix = 'aıou'.includes(last) ? 'a' : 'e';
+  return `${name}'${vowels.includes(lower.slice(-1)) ? 'y' : ''}${suffix}`;
+}

@@ -6,6 +6,8 @@ export interface Person {
   uid: string;
   email: string;
   name: string;
+  /** Hitap adı (Firestore `allowed/{email}.nick`), ör. açılış notunda kullanılır */
+  nick?: string;
   photoURL?: string;
 }
 

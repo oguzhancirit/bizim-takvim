@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { signOut, type User } from 'firebase/auth';
 import { auth } from './firebase';
 import type { AppNotification, Plan } from './types';
-import { daysUntil, firstName, longDate, todayKey } from './lib/dates';
+import { dative, daysUntil, firstName, longDate, todayKey } from './lib/dates';
 import { markRead, setBusyDay, useBusy, useNotifications, usePeople, usePlans } from './lib/store';
 import { celebrate } from './lib/confetti';
 import { enablePush, listenForeground, pushState, registerSW, type PushState } from './lib/push';
@@ -18,6 +18,9 @@ import { IdeaMarquee } from './components/Gates';
 import { AnimatedGradientText } from './components/magic/AnimatedGradientText';
 import { DiaTextReveal } from './components/magic/DiaTextReveal';
 import { DotPattern } from './components/magic/DotPattern';
+import { Aurora } from './components/magic/Aurora';
+import { Floating3DParticles } from './components/magic/Floating3DParticles';
+import { Reminder } from './components/Reminder';
 import { ShimmerButton } from './components/magic/ShimmerButton';
 import { SpinningText } from './components/magic/SpinningText';
 import { TextReveal } from './components/magic/TextReveal';
@@ -35,6 +38,7 @@ export default function Home({ user }: { user: User }) {
   const [showNotifs, setShowNotifs] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [busyMode, setBusyMode] = useState(false);
+  const [showReminder, setShowReminder] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
   const [cele, setCele] = useState<Pick<Plan, 'date' | 'title' | 'time' | 'place'> | null>(null);
   const [push, setPush] = useState<PushState>('unsupported');
@@ -177,7 +181,11 @@ export default function Home({ user }: { user: User }) {
 
   return (
     <div className="app">
-      <DotPattern glow glowCount={24} className="app-dots" />
+      <div className="app-bg" aria-hidden>
+        <Aurora />
+        <DotPattern glow glowCount={28} className="app-dots" />
+        <Floating3DParticles quantity={220} size={5} opacity={0.55} drift={0.3} mobileFactor={0.45} />
+      </div>
       <Toast message={toast} />
 
       <header className="topbar">
@@ -334,6 +342,13 @@ export default function Home({ user }: { user: User }) {
       </Sheet>
 
       <Celebration plan={cele} onClose={() => setCele(null)} />
+
+      {showReminder && (
+        <Reminder
+          nameDative={partner ? dative(partner.nick || firstName(partner.name)) : null}
+          onDone={() => setShowReminder(false)}
+        />
+      )}
     </div>
   );
 }
