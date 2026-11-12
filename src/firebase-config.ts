@@ -2,12 +2,12 @@
 // Bu değerler gizli değildir (her web uygulamasında tarayıcıya gider); verileri koruyan şey
 // firestore.rules ve Firestore'daki `allowed` listesidir.
 export const firebaseConfig = {
-  apiKey: 'BURAYA_API_KEY',
-  authDomain: 'BURAYA_PROJE_ID.firebaseapp.com',
-  projectId: 'BURAYA_PROJE_ID',
-  storageBucket: 'BURAYA_PROJE_ID.firebasestorage.app',
-  messagingSenderId: 'BURAYA_SENDER_ID',
-  appId: 'BURAYA_APP_ID',
+  apiKey: 'AIzaSyDSkR8s5q5ASjvSyLzEucUz3aF48LWDtOY',
+  authDomain: 'bizim-takvim-48b62.firebaseapp.com',
+  projectId: 'bizim-takvim-48b62',
+  storageBucket: 'bizim-takvim-48b62.firebasestorage.app',
+  messagingSenderId: '334070201655',
+  appId: '1:334070201655:web:ce1e8305a07fb946802eb2',
 };
 
 // Firebase konsolu → Proje ayarları → Cloud Messaging → Web Push sertifikaları → "Anahtar çifti" (public key)
