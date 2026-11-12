@@ -21,13 +21,16 @@ const parts = await ref.collection('parts').orderBy('__name__').get();
 const backup = JSON.parse(parts.docs.map((d) => d.data().json).join(''));
 const current = await dumpAll(db);
 
+// Public repoda iş kayıtları herkese açık: belge kimliklerini (e-posta, uid) maskele
+const mask = (id) => (id.length <= 4 ? '****' : `${id.slice(0, 2)}…${id.slice(-2)}`);
+
 let changes = 0;
 for (const [col, docs] of Object.entries(backup)) {
   for (const [docId, data] of Object.entries(docs)) {
     const now = current[col]?.[docId];
     if (JSON.stringify(now) === JSON.stringify(data)) continue;
     changes++;
-    console.log(`${now ? 'DEĞİŞMİŞ' : 'EKSİK  '}  ${col}/${docId}`);
+    console.log(`${now ? 'DEĞİŞMİŞ' : 'EKSİK  '}  ${col}/${mask(docId)}`);
     if (apply) await db.collection(col).doc(docId).set(decode(data));
   }
 }
