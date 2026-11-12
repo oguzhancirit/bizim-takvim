@@ -1,5 +1,6 @@
 name: Günlük yedek
 
+# Zamanlama, cron satırını en son değiştiren (hesaba bağlı) kullanıcı adına çalışır.
 # Her gece 03:17 (TSİ) tüm verileri Firestore'daki gizli backups/ alanına kopyalar (60 gün saklanır).
 on:
   schedule:

@@ -38,9 +38,15 @@ export async function listenForeground() {
 }
 
 /** Bildirim durumu: izin + bu cihazın jetonu hesaba kayıtlı mı. İzin isteği açmaz. */
-export async function pushDiagnostics(uid: string): Promise<{ state: PushState; registered: boolean }> {
+export interface PushDiag { state: PushState; registered: boolean; standalone: boolean; rightHost: boolean; ios: boolean }
+
+export const isStandalone = () =>
+  window.matchMedia('(display-mode: standalone)').matches || (navigator as { standalone?: boolean }).standalone === true;
+
+export async function pushDiagnostics(uid: string): Promise<PushDiag> {
   const state = await pushState();
-  if (state !== 'granted') return { state, registered: false };
+  const base = { standalone: isStandalone(), rightHost: location.hostname === 'bizim-takvim-48b62.firebaseapp.com' || location.hostname === 'localhost', ios: /iphone|ipad|ipod/i.test(navigator.userAgent) };
+  if (state !== 'granted') return { state, registered: false, ...base };
   try {
     const reg = (await registerSW()) ?? undefined;
     const token = await getToken(getMessaging(app), { vapidKey, serviceWorkerRegistration: reg });
@@ -50,9 +56,9 @@ export async function pushDiagnostics(uid: string): Promise<{ state: PushState; 
       // Jeton değişmiş/eksikse sessizce kaydet ki bildirimler kaçmasın
       await setDoc(doc(db, 'users', uid), { tokens: arrayUnion(token) }, { merge: true });
     }
-    return { state, registered: !!token };
+    return { state, registered: !!token, ...base };
   } catch {
-    return { state, registered: false };
+    return { state, registered: false, ...base };
   }
 }
 

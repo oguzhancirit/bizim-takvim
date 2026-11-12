@@ -556,3 +556,6 @@ input:disabled { background: transparent; border-color: transparent; padding-lef
 .push-test-in { display: flex; flex-direction: column; gap: 8px; padding: 6px 2px 4px; }
 .pt-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; padding: 8px 12px; background: var(--surface-2); border-radius: 12px; }
 .pt-row span { color: var(--muted); }
+.pt-help { margin: 2px 0 0; padding: 12px 14px; border-radius: 14px; background: var(--amber-soft); color: color-mix(in srgb, var(--amber) 60%, var(--ink)); font-size: 14px; line-height: 1.5; }
+.pt-help ol { margin: 6px 0 0; padding-left: 20px; }
+.pt-help li + li { margin-top: 4px; }

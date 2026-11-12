@@ -2,6 +2,7 @@ name: Telefon bildirimleri
 
 # Her 5 dakikada bir bekleyen bildirimleri telefona gönderir.
 # Not: GitHub zamanlanmış işleri bazen birkaç dakika geciktirebilir.
+# Zamanlama, cron satırını en son değiştiren (hesaba bağlı) kullanıcı adına çalışır.
 on:
   schedule:
     - cron: '*/5 * * * *'

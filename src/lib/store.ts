@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import {
   addDoc, arrayRemove, arrayUnion, collection, doc, getDoc, onSnapshot, query,
-  runTransaction, serverTimestamp, setDoc, updateDoc, where, writeBatch,
+  runTransaction, serverTimestamp, setDoc, updateDoc, waitForPendingWrites, where, writeBatch,
 } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import type { Activity, AppNotification, NotifType, Person, Plan } from '../types';
@@ -119,6 +119,26 @@ export function useNotifications(email: string) {
     [email],
   );
   return { items, loaded };
+}
+
+/** Telefonda bekleyip henüz sunucuya ulaşmamış değişiklik var mı? (uygulamayı silmeden önce kontrol) */
+export function useSyncStatus() {
+  const [synced, setSynced] = useState<boolean | null>(null);
+  useEffect(() => {
+    let alive = true;
+    const check = () => {
+      setSynced(null);
+      Promise.race([
+        waitForPendingWrites(db).then(() => true),
+        new Promise<boolean>((r) => setTimeout(() => r(false), 8000)),
+      ]).then((ok) => alive && setSynced(ok));
+    };
+    check();
+    const id = window.setInterval(check, 15000);
+    window.addEventListener('online', check);
+    return () => { alive = false; window.clearInterval(id); window.removeEventListener('online', check); };
+  }, []);
+  return synced;
 }
 
 /* ---------------- İşlemler ---------------- */

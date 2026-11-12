@@ -164,7 +164,7 @@ export default function Home({ user }: { user: User }) {
     try {
       const r = await enablePush(me.uid);
       setPush(r as PushState);
-      showToast(r === 'granted' ? 'Bildirimler açıldı 🔔' : 'Bildirim izni verilmedi');
+      showToast(r === 'granted' ? 'Bildirimler açıldı 🔔' : 'İzin verilmedi — zil → "Bildirimleri test et"e bak');
     } catch (e) {
       console.error(e);
       showToast('Bildirim açılamadı');
