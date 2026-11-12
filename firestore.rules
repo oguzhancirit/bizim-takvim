@@ -1,0 +1,46 @@
+rules_version = '2';
+
+// Sadece `allowed` koleksiyonunda e-postası olan (belge kimliği = küçük harf e-posta) iki kişi erişebilir.
+// E-postalar koda yazılmaz; Firebase konsolundan `allowed` koleksiyonuna elle eklenir.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+    function myEmail() {
+      return request.auth.token.email.lower();
+    }
+    function isAllowed() {
+      return signedIn() && exists(/databases/$(database)/documents/allowed/$(myEmail()));
+    }
+
+    match /allowed/{email} {
+      allow get: if signedIn() && myEmail() == email;
+      allow list: if isAllowed();
+      allow write: if false;
+    }
+
+    match /users/{uid} {
+      allow read: if isAllowed();
+      allow write: if isAllowed() && request.auth.uid == uid;
+    }
+
+    match /busy/{uid} {
+      allow read: if isAllowed();
+      allow write: if isAllowed() && request.auth.uid == uid;
+    }
+
+    match /plans/{planId} {
+      allow read, write: if isAllowed();
+    }
+
+    match /notifications/{id} {
+      allow read: if isAllowed();
+      allow create: if isAllowed() && request.resource.data.pushed == false;
+      allow update: if isAllowed() && resource.data.toEmail == myEmail()
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow delete: if false;
+    }
+  }
+}
