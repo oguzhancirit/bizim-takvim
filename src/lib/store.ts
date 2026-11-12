@@ -126,8 +126,8 @@ export function useNotifications(email: string) {
 async function notify(to: Person | null, from: Person, type: NotifType, plan: Pick<Plan, 'id' | 'date' | 'title'>) {
   if (!to?.email) return;
   await addDoc(collection(db, 'notifications'), {
-    toEmail: to.email, fromName: firstName(from.name), type, planId: plan.id, date: plan.date,
-    title: plan.title, read: false, pushed: false, createdAt: serverTimestamp(),
+    toEmail: to.email.toLowerCase(), fromName: firstName(from.name).slice(0, 40), type, planId: plan.id, date: plan.date,
+    title: plan.title.slice(0, 120), read: false, pushed: false, createdAt: serverTimestamp(),
   });
 }
 
@@ -201,7 +201,7 @@ export async function cancelPlan(plan: Plan, me: Person, partner: Person | null)
 /** Kendine test bildirimi: uygulama içinde hemen görünür, telefona GitHub Actions ile 5–15 dk içinde gelir. */
 export async function sendTestNotification(me: Person) {
   await addDoc(collection(db, 'notifications'), {
-    toEmail: me.email, fromName: firstName(me.name), type: 'test', planId: '', date: todayKey(),
+    toEmail: me.email.toLowerCase(), fromName: firstName(me.name).slice(0, 40), type: 'test', planId: '', date: todayKey(),
     title: '', read: false, pushed: false, createdAt: serverTimestamp(),
   });
 }

@@ -126,6 +126,7 @@ function Planner({
 
       <SyncedInput
         className="title-field"
+        maxLength={120}
         value={plan.title}
         placeholder="Date'in adı (ör. Sahilde gün batımı)"
         ariaLabel="Date başlığı"
@@ -139,7 +140,7 @@ function Planner({
         </label>
         <label className="mini-field grow">
           <span>Yer</span>
-          <SyncedInput value={plan.place} placeholder="Nerede?" disabled={!editable} onSave={(v) => updatePlanField(plan.id, me.uid, 'place', v)} />
+          <SyncedInput value={plan.place} maxLength={200} placeholder="Nerede?" disabled={!editable} onSave={(v) => updatePlanField(plan.id, me.uid, 'place', v)} />
         </label>
       </div>
 
@@ -157,6 +158,7 @@ function Planner({
               <Avatar person={who(a.by)} color={color(who(a.by))} size={24} />
               <SyncedInput
                 className="act-field"
+                maxLength={200}
                 value={a.text}
                 disabled={!editable}
                 ariaLabel="Etkinlik"
@@ -179,7 +181,7 @@ function Planner({
             add();
           }}
         >
-          <input className="field" value={newText} onChange={(e) => setNewText(e.target.value)} placeholder="Etkinlik ekle: sinema, akşam yemeği…" aria-label="Yeni etkinlik" />
+          <input className="field" maxLength={200} value={newText} onChange={(e) => setNewText(e.target.value)} placeholder="Etkinlik ekle: sinema, akşam yemeği…" aria-label="Yeni etkinlik" />
           <motion.button whileTap={{ scale: 0.9 }} className="btn soft" type="submit" disabled={!newText.trim()}>Ekle</motion.button>
         </form>
       )}

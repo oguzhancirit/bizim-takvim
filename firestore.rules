@@ -2,6 +2,11 @@ rules_version = '2';
 
 // Sadece `allowed` koleksiyonunda e-postası olan (belge kimliği = küçük harf e-posta) iki kişi erişebilir.
 // E-postalar koda yazılmaz; Firebase konsolundan `allowed` koleksiyonuna elle eklenir.
+//
+// Güvenlik ilkeleri:
+//  - VERİ KAYBI YOK: hiçbir belge silinemez. Plan "silme" = status: 'cancelled'.
+//  - Kimlik taklidi yok: yazan kişi alanları (createdBy, updatedBy, sentBy, email) giriş yapanın kendisi olmalı.
+//  - Her belgede alan listesi ve boyut sınırları var (çöp/dev veriyle doldurmaya karşı).
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -14,6 +19,12 @@ service cloud.firestore {
     function isAllowed() {
       return signedIn() && exists(/databases/$(database)/documents/allowed/$(myEmail()));
     }
+    function str(v, max) {
+      return v is string && v.size() <= max;
+    }
+    function data() {
+      return request.resource.data;
+    }
 
     match /allowed/{email} {
       allow get: if signedIn() && myEmail() == email;
@@ -21,33 +32,74 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // VERİ KAYBI YOK: uygulama hiçbir belgeyi silemez. Plan "silme" = status: 'cancelled'.
+    // Kullanıcı kaydı: e-posta sadece kendi e-postan olabilir (başkasının bildirimlerini kaçırmaya karşı),
+    // fotoğraf sadece Google'ın fotoğraf sunucusundan (IP/konum sızdıran takip pikseline karşı).
+    function validUser() {
+      return data().keys().hasOnly(['email', 'name', 'photoURL', 'tokens'])
+        && data().email == myEmail()
+        && str(data().get('name', ''), 80)
+        && (data().get('photoURL', '') == ''
+            || (str(data().photoURL, 600) && data().photoURL.matches('^https://lh[0-9]\\.googleusercontent\\.com/.*')))
+        && (!('tokens' in data()) || (data().tokens is list && data().tokens.size() <= 10));
+    }
     match /users/{uid} {
       allow read: if isAllowed();
-      allow create, update: if isAllowed() && request.auth.uid == uid;
+      allow create, update: if isAllowed() && request.auth.uid == uid && validUser();
       allow delete: if false;
     }
 
     match /busy/{uid} {
       allow read: if isAllowed();
-      allow create, update: if isAllowed() && request.auth.uid == uid;
+      allow create, update: if isAllowed() && request.auth.uid == uid
+        && data().keys().hasOnly(['days'])
+        && data().days is list && data().days.size() <= 1000;
       allow delete: if false;
     }
 
+    function validPlan() {
+      return data().keys().hasOnly([
+          'date', 'title', 'time', 'place', 'activities', 'removedActivities', 'status',
+          'createdBy', 'sentBy', 'updatedBy', 'updatedAt', 'statusBeforeCancel', 'cancelledBy', 'cancelledAt'])
+        && data().date is string && data().date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && str(data().title, 120)
+        && str(data().time, 5)
+        && str(data().place, 200)
+        && data().activities is list && data().activities.size() <= 50
+        && (!('removedActivities' in data()) || (data().removedActivities is list && data().removedActivities.size() <= 500))
+        && data().status in ['draft', 'pending', 'accepted', 'cancelled']
+        && data().updatedBy == request.auth.uid;
+    }
     match /plans/{planId} {
-      allow read, create: if isAllowed();
-      // Planın tarihi ve kimin açtığı sonradan değiştirilemez
-      allow update: if isAllowed()
-                    && request.resource.data.date == resource.data.date
-                    && request.resource.data.createdBy == resource.data.createdBy;
+      allow read: if isAllowed();
+      allow create: if isAllowed() && validPlan()
+        && data().createdBy == request.auth.uid
+        && data().status == 'draft';
+      allow update: if isAllowed() && validPlan()
+        // Planın tarihi ve kimin açtığı sonradan değiştirilemez
+        && data().date == resource.data.date
+        && data().createdBy == resource.data.createdBy
+        // Onaya gönderen kişi kendisi olarak kaydedilir
+        && (data().status != 'pending' || resource.data.status == 'pending' || data().sentBy == request.auth.uid)
+        // Onay: sadece onay bekleyen bir plan, sadece gönderen OLMAYAN kişi tarafından
+        && (data().status != 'accepted' || resource.data.status == 'accepted'
+            || (resource.data.status == 'pending' && resource.data.sentBy != request.auth.uid));
       allow delete: if false;
     }
 
+    // Bildirimler: sadece iki izinli kişiye, sabit türlerle, kısa metinlerle (sahte/oltalama push'a karşı).
     match /notifications/{id} {
       allow read: if isAllowed();
-      allow create: if isAllowed() && request.resource.data.pushed == false;
+      allow create: if isAllowed()
+        && data().keys().hasOnly(['toEmail', 'fromName', 'type', 'planId', 'date', 'title', 'read', 'pushed', 'createdAt'])
+        && data().pushed == false && data().read == false
+        && data().type in ['draft', 'request', 'accepted', 'returned', 'cancelled', 'test']
+        && str(data().toEmail, 120) && exists(/databases/$(database)/documents/allowed/$(data().toEmail))
+        && str(data().fromName, 40)
+        && str(data().title, 120)
+        && str(data().planId, 40)
+        && str(data().date, 10);
       allow update: if isAllowed() && resource.data.toEmail == myEmail()
-                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+                    && data().diff(resource.data).affectedKeys().hasOnly(['read']);
       allow delete: if false;
     }
 

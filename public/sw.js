@@ -20,7 +20,9 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const url = (event.notification.data && event.notification.data.url) || self.registration.scope;
+  // Güvenlik: sadece uygulamanın kendi adresini aç (bildirimle başka siteye yönlendirmeye karşı)
+  const wanted = event.notification.data && event.notification.data.url;
+  const url = typeof wanted === 'string' && wanted.startsWith(self.registration.scope) ? wanted : self.registration.scope;
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
       for (const c of list) {

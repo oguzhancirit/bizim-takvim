@@ -35,11 +35,21 @@ function text(n) {
 }
 
 const DAY = 24 * 60 * 60 * 1000;
+// Güvenlik: sadece izinli iki kişiye gönder; metinlerden link/kontrol karakteri temizle (oltalamaya karşı)
+const allowedSnap = await db.collection('allowed').get();
+const ALLOWED = new Set(allowedSnap.docs.map((d) => d.id));
+const clean = (s, max) => String(s ?? '').replace(/https?:\/\/\S+|www\.\S+/gi, '').replace(/[\u0000-\u001f\u202a-\u202e]/g, '').trim().slice(0, max);
 const snap = await db.collection('notifications').where('pushed', '==', false).limit(100).get();
 console.log(`${snap.size} bekleyen bildirim`);
 
 for (const docSnap of snap.docs) {
-  const n = docSnap.data();
+  const raw = docSnap.data();
+  const n = { ...raw, fromName: clean(raw.fromName, 40), title: clean(raw.title, 120) };
+  if (!ALLOWED.has(n.toEmail)) {
+    console.log(`${docSnap.id}: alıcı izinli değil, atlandı`);
+    await docSnap.ref.update({ pushed: true });
+    continue;
+  }
   const age = Date.now() - (n.createdAt?.toMillis?.() ?? Date.now());
   // Test bildirimi uygulamada okunmuş olsa da telefona gönderilir.
   if ((n.read && n.type !== 'test') || age > DAY) {
@@ -53,7 +63,7 @@ for (const docSnap of snap.docs) {
     const { title, body } = text(n);
     const res = await messaging.sendEachForMulticast({
       tokens: owners.map((o) => o.token),
-      data: { title, body, url: APP_URL, tag: `plan-${n.planId}` },
+      data: { title, body, url: APP_URL, tag: `plan-${clean(n.planId, 40)}` },
       webpush: { headers: { Urgency: 'high', TTL: '86400' }, fcmOptions: { link: APP_URL } },
     });
     // Geçersiz/eski jetonları temizle

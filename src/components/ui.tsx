@@ -100,9 +100,11 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
 
 /** Canlı senkron input: karşı tarafın yazdıkları anında gelir, sen yazarken üzerine yazılmaz. */
 export function SyncedInput({
-  value, onSave, disabled, placeholder, type = 'text', className = 'field', ariaLabel,
+  value, onSave, disabled, placeholder, type = 'text', className = 'field', ariaLabel, maxLength,
 }: {
   value: string; onSave: (v: string) => void; disabled?: boolean; placeholder?: string; type?: string; className?: string; ariaLabel?: string;
+  /** Sunucu kurallarındaki sınırla aynı olmalı (firestore.rules) */
+  maxLength?: number;
 }) {
   const [local, setLocal] = useState(value);
   const focused = useRef(false);
@@ -144,6 +146,7 @@ export function SyncedInput({
       type={type}
       value={local}
       disabled={disabled}
+      maxLength={maxLength}
       placeholder={placeholder}
       aria-label={ariaLabel ?? placeholder}
       onFocus={() => (focused.current = true)}

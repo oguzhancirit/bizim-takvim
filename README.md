@@ -1,6 +1,6 @@
 # Date Takvimi
 
-Ece ile ortak date takvimi. Dolu günler kırmızı, ikinizin de boş olduğu günler yeşil.
+İki kişilik ortak date takvimi. Dolu günler kırmızı, ikinizin de boş olduğu günler yeşil.
 Yeşil bir günü ayırıp **ortak taslak** açarsın, ikiniz de etkinlik ekleyip düzenlersiniz,
 sonra **Onaya gönder** → karşı tarafa bildirim gider → onaylanınca konfeti 🎉 ve gün turuncu ✦ ile işaretlenir.
 
@@ -33,8 +33,8 @@ sonra **Onaya gönder** → karşı tarafa bildirim gider → onaylanınca konfe
 3. **Firestore Database → Veritabanı oluştur** (üretim modu, konum `eur3`).
    **Kurallar** sekmesine bu repodaki [`firestore.rules`](firestore.rules) içeriğini yapıştır → **Yayınla**.
 4. Firestore'da **Koleksiyon başlat** → koleksiyon kimliği `allowed`:
-   - Belge kimliği: senin e-postan (küçük harf), alan `name` = `Can`
-   - Belge kimliği: Ece'nin e-postası (küçük harf), alan `name` = `Ece`
+   - Belge kimliği: senin e-postan (küçük harf), alan `name` = görünen isim (isteğe bağlı `nick` = takma ad)
+   - Belge kimliği: diğer kişinin e-postası (küçük harf), alan `name` = görünen isim
 
    Sadece bu iki e-posta giriş yapabilir. E-postalar koda yazılmaz, repo public olsa da görünmez.
 5. **Proje ayarları → Genel → Uygulamalarınız → Web (</>)** ile uygulama ekle. Çıkan `firebaseConfig`
@@ -102,3 +102,15 @@ Telefonda "Hareketi azalt" açıksa hepsi durur.
 - **Geri yükleme:** GitHub → Actions → **Yedekten geri yükle** → tarih gir. Önce "uygula" kapalı çalıştırıp raporu oku;
   sonra açık çalıştır. Geri yükleme hiçbir belgeyi silmez, sadece eksik/değişmiş olanları yedekteki haline getirir.
 - Yazarken uygulama kapansa bile bekleyen metin hemen kaydedilir; internet yoksa telefonda tutulur, bağlanınca gönderilir.
+
+## Güvenlik
+- Erişim: sadece `allowed/{email}` listesindeki, Google'da doğrulanmış e-postalar. E-posta/şifre ve anonim giriş kapalı.
+- `firestore.rules`: silme yok, alan listesi + boyut sınırları, kimlik taklidi yok (createdBy/updatedBy/sentBy/email
+  giriş yapanın kendisi olmalı), kendi gönderdiğin planı kendin onaylayamazsın, bildirimler sadece izinli kişilere,
+  profil fotoğrafı sadece Google sunucusundan. Kural değişikliği yayından önce senaryo testinden geçirilir.
+- Hosting başlıkları: CSP, clickjacking koruması (`frame-ancestors 'self'`), `nosniff`, `Referrer-Policy`,
+  `Permissions-Policy`; HSTS Firebase tarafından.
+- GitHub Actions: aksiyonlar commit SHA'sına sabit, varsayılan token salt okunur, PR'larda çalışan iş akışı yok.
+  `FIREBASE_SERVICE_ACCOUNT` sadece `main` üzerindeki iş akışlarında kullanılır.
+- Repoda kişisel bilgi yok; commit e-postası GitHub noreply adresi.
+- Firebase web yapılandırması (apiKey vb.) gizli değildir; koruma kurallardadır.
