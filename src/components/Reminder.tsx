@@ -30,8 +30,9 @@ function BlurWords({ text, delay = 0 }: { text: string; delay?: number }) {
 }
 
 /**
- * Uygulama her açıldığında çıkan hatırlatma: "{partner}'ye vakit ayırmayı unutma".
- * "Tamam, söz" deyince yıldız patlaması + ekran butondan başlayarak dairesel kapanır ve takvim açılır.
+ * Uygulama her açıldığında çıkan şaka hatırlatma: kızgın kedi parmağıyla dürterek
+ * "{partner}'ye vakit ayırmayı unutma!" diye şikayet ediyor. "Tamam tamam, söz" deyince
+ * yıldız patlaması + ekran butondan başlayarak dairesel kapanır ve takvim açılır.
  */
 export function Reminder({ nameDative, onDone }: { nameDative: string | null; onDone: () => void }) {
   const [leaving, setLeaving] = useState(false);
@@ -71,8 +72,19 @@ export function Reminder({ nameDative, onDone }: { nameDative: string | null; on
 
           <motion.div className="reminder-in" exit={{ y: -40, opacity: 0, filter: 'blur(6px)' }} transition={{ duration: 0.45 }}>
             <motion.div className="reminder-orbit" initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 180, damping: 16 }}>
-              <SpinningText text="KÜÇÜK BİR HATIRLATMA • KÜÇÜK BİR HATIRLATMA •" radius={9.5} duration={18} />
-              <span className="reminder-emoji">⏳</span>
+              <SpinningText text="BAK BURAYA • BAK BURAYA • BAK BURAYA •" radius={9.5} duration={14} />
+              <span className="angry-cat" aria-hidden>
+                <span className="cat">😾</span>
+                <span className="poke">🫵</span>
+              </span>
+              <motion.span
+                className="huh-bubble"
+                initial={{ scale: 0, rotate: -20, opacity: 0 }}
+                animate={{ scale: 1, rotate: 8, opacity: 1 }}
+                transition={{ delay: 0.7, type: 'spring', stiffness: 420, damping: 12 }}
+              >
+                Hıh! 😤
+              </motion.span>
             </motion.div>
 
             {nameDative ? (
@@ -80,17 +92,17 @@ export function Reminder({ nameDative, onDone }: { nameDative: string | null; on
                 <motion.h1 className="reminder-name" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.25, duration: 0.5 }}>
                   <AnimatedGradientText from="var(--rose)" to="var(--p2)" speed={1.4}>{nameDative}</AnimatedGradientText>
                 </motion.h1>
-                <DiaTextReveal as="h2" text="vakit ayırmayı unutma" className="reminder-line" delay={0.6} duration={1.5} />
+                <DiaTextReveal as="h2" text="vakit ayırmayı unutma!" className="reminder-line" delay={0.6} duration={1.5} />
               </>
             ) : (
               <DiaTextReveal as="h2" text="Birbirinize vakit ayırmayı unutmayın" className="reminder-line" delay={0.3} duration={1.6} />
             )}
 
-            <BlurWords text="Plan yapmak kolay, asıl güzel olan o zamanı gerçekten ayırmak." delay={1.6} />
+            <BlurWords text="Yoksa fena küserim, haberin olsun 😒" delay={1.7} />
 
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.3, type: 'spring', stiffness: 220, damping: 20 }}>
               <ShimmerButton ref={btn} className="big promise-btn" onClick={promise}>
-                Tamam, söz 🤞
+                Tamam tamam, söz 😅
               </ShimmerButton>
             </motion.div>
           </motion.div>

@@ -87,7 +87,7 @@ export function Floating3DParticles({
       }
       proj.sort((a, b) => a.s - b.s); // uzaktakiler önce (ressam algoritması)
       for (const { x, y, s, p } of proj) {
-        const d = p.size * s * 1.6;
+        const d = p.size * s * 4;
         ctx.globalAlpha = Math.min(1, p.alpha * (0.45 + s * 0.8));
         ctx.setTransform(dpr * Math.cos(p.rot), dpr * Math.sin(p.rot), -dpr * Math.sin(p.rot), dpr * Math.cos(p.rot), dpr * x, dpr * y);
         ctx.drawImage(sprites[p.sprite], -d / 2, -d / 2, d, d);

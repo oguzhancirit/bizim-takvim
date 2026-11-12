@@ -508,7 +508,28 @@ input:disabled { background: transparent; border-color: transparent; padding-lef
 .reminder-in { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; max-width: 440px; width: 100%; }
 .reminder-orbit { position: relative; width: 200px; height: 200px; display: grid; place-items: center; margin-bottom: 4px; }
 .reminder-orbit .spin-text { font-size: 10.5px; }
-.reminder-emoji { font-size: 64px; filter: drop-shadow(0 10px 22px color-mix(in srgb, var(--rose) 35%, transparent)); animation: float-y 3.2s ease-in-out infinite; }
+.angry-cat { position: relative; display: inline-block; }
+.angry-cat .cat { display: inline-block; font-size: 84px; line-height: 1; filter: drop-shadow(0 10px 22px color-mix(in srgb, var(--rose) 35%, transparent)); animation: grumble 2.4s ease-in-out infinite; transform-origin: 50% 90%; }
+.angry-cat .poke { position: absolute; right: -26px; bottom: -6px; font-size: 44px; line-height: 1; animation: poke .9s ease-in-out infinite; transform-origin: 80% 80%; }
+.huh-bubble {
+  position: absolute; top: 2px; right: -22px; padding: 6px 12px; border-radius: 16px 16px 16px 4px;
+  background: var(--surface); color: var(--ink); font-weight: 800; font-size: 15px; box-shadow: var(--shadow); white-space: nowrap;
+}
+/* Kedi kafasını sallayıp homurdanıyor */
+@keyframes grumble {
+  0%, 55%, 100% { transform: rotate(0) translateY(0); }
+  60% { transform: rotate(-9deg) translateY(-2px); }
+  68% { transform: rotate(8deg); }
+  76% { transform: rotate(-6deg); }
+  84% { transform: rotate(4deg); }
+  92% { transform: rotate(0); }
+}
+/* Parmakla dürtme: ekrana doğru büyüyüp geri çekilir */
+@keyframes poke {
+  0%, 100% { transform: scale(1) rotate(0); }
+  35% { transform: scale(1.28) rotate(-8deg) translate(-4px, 2px); }
+  50% { transform: scale(1.22) rotate(-6deg); }
+}
 @keyframes float-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 .reminder-name { margin: 0; font-family: var(--serif); font-size: clamp(54px, 16vw, 80px); line-height: 1; letter-spacing: -.025em; font-weight: 700; }
 .reminder-line { margin: 0; font-family: var(--serif); font-size: clamp(28px, 8vw, 40px); line-height: 1.15; font-weight: 600; letter-spacing: -.01em; }
