@@ -15,6 +15,7 @@ import { BellButton, NotificationList, Toast } from './components/Notifications'
 import { Celebration } from './components/Celebration';
 import { Avatar, Sheet, personColor } from './components/ui';
 import { IdeaMarquee } from './components/Gates';
+import { IdeaCase } from './components/IdeaCase';
 import { AnimatedGradientText } from './components/magic/AnimatedGradientText';
 import { DiaTextReveal } from './components/magic/DiaTextReveal';
 import { DotPattern } from './components/magic/DotPattern';
@@ -304,6 +305,7 @@ export default function Home({ user }: { user: User }) {
       <section className="ideas-block">
         <h3 className="section-label">Date fikirleri</h3>
         <IdeaMarquee />
+        <IdeaCase />
       </section>
 
       <section className="summary-block">

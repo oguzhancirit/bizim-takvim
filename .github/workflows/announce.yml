@@ -1,0 +1,36 @@
+name: Duyuru gönder
+
+# Elle çalıştırılır: iki kullanıcının telefonuna tek seferlik duyuru bildirimi gönderir (ör. "uygulama güncellendi").
+# Veritabanına yazmaz.
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: Bildirim başlığı (boş bırakılırsa "Date Takvimi güncellendi")
+        required: false
+        default: ''
+      body:
+        description: Bildirim metni
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node scripts/announce.mjs
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          APP_URL: https://bizim-takvim-48b62.firebaseapp.com/
+          ANNOUNCE_TITLE: ${{ inputs.title }}
+          ANNOUNCE_BODY: ${{ inputs.body }}

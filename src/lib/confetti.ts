@@ -63,3 +63,13 @@ export function celebrate(from?: HTMLElement | null) {
   sideCannons(2200);
   setTimeout(() => fireworks(3000), 400);
 }
+
+/** Günün kasası açıldığında: çıkan kartın üzerinden, nadirlik renginde küçük yıldız patlaması. */
+export function sparkle(from: HTMLElement | null, color: string) {
+  if (prefersReducedMotion() || !from) return;
+  const r = from.getBoundingClientRect();
+  const origin = { x: (r.left + r.width / 2) / window.innerWidth, y: (r.top + r.height / 2) / window.innerHeight };
+  const opts = { ...base, origin, spread: 360, ticks: 60, gravity: 0.3, decay: 0.93, startVelocity: 22, colors: [color, '#ffd166', '#ffffff'] };
+  confetti({ ...opts, particleCount: n(36), scalar: 1.1, shapes: ['star'] });
+  confetti({ ...opts, particleCount: n(14), scalar: 0.7, shapes: ['circle'] });
+}
